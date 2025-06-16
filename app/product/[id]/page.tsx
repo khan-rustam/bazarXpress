@@ -151,10 +151,8 @@ export default function ProductDetail() {
               Shop
             </Link>
             <span className="mx-2 text-gray-400">/</span>
-            <Link href={`/shop/${product.category.toLowerCase()}`} className="text-gray-500 hover:text-codGray">
-              <Link href={`/shop?category=${encodeURIComponent(product.category)}`} className="text-gray-500 hover:text-codGray">
-                {product.category}
-              </Link>
+            <Link href={`/shop?category=${encodeURIComponent(product.category)}`} className="text-gray-500 hover:text-codGray">
+              {product.category}
             </Link>
             <span className="mx-2 text-gray-400">/</span>
             <span className="text-codGray font-medium">{product.name}</span>
