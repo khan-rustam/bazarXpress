@@ -1,6 +1,7 @@
 import Layout from "../../components/Layout"
 import Link from "next/link"
 import { Shield, User, Lock, Mail, Globe, Cookie, Users, RefreshCw, ArrowUp } from "lucide-react"
+import BackToTopButton from "../../components/BackToTopButton"
 
 export default function PrivacyPolicy() {
   return (
@@ -129,13 +130,7 @@ export default function PrivacyPolicy() {
       </div>
 
       {/* Back to Top Button */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="fixed bottom-8 right-8 z-50 bg-spectra text-white p-4 rounded-full shadow-xl hover:bg-elm transition-colors animate-fade-in"
-        aria-label="Back to Top"
-      >
-        <ArrowUp className="h-6 w-6" />
-      </button>
+      <BackToTopButton />
     </Layout>
   )
 }

@@ -171,7 +171,11 @@ export default function AdminBlog() {
                   <label className="block font-medium mb-1">Content</label>
                   <div className="bg-white border border-gray-300 rounded-lg min-h-[120px] p-2">
                     {showModal && (
-                      <RichTextEditor value={form.content} onChange={(html) => setForm({ ...form, content: html })} />
+                      <RichTextEditor
+                        key={editing ? editing.id : "new"}
+                        value={form.content}
+                        onChange={(html) => setForm({ ...form, content: html })}
+                      />
                     )}
                   </div>
                 </div>
