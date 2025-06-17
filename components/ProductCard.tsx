@@ -13,7 +13,7 @@ interface Product {
   name: string
   price: number
   originalPrice?: number
-  images: string[]
+  image: string
   category: string
   rating: number
   isNew?: boolean
@@ -68,7 +68,7 @@ export default function ProductCard({ product, onQuickView }: ProductCardProps) 
       {/* Product Image */}
       <div className="relative aspect-square overflow-hidden">
         <Image
-          src={product.images?.[0] || "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80"}
+          src={product.image || "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80"}
           alt={product.name}
           fill
           className="object-cover group-hover:scale-110 transition-transform duration-500"
