@@ -162,7 +162,7 @@ export default function AdminBanner() {
                       <img src={imagePreview} alt="Preview" className="h-32 object-contain mb-2 rounded shadow" />
                     ) : (
                       <>
-                        <svg width="40" height="40" fill="none" stroke="currentColor" className="text-brand-primary" strokeWidth="2" viewBox="0 0 24 24"><path d="M16 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="8" rx="2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+                        <svg width="40" height="40" fill="none" stroke="currentColor" className="text-brand-primary" strokeWidth="2" viewBox="0 0 24 24"><path d="M16 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2" /><rect x="8" y="2" width="8" height="8" rx="2" /><line x1="12" y1="12" x2="12" y2="16" /><line x1="10" y1="14" x2="14" y2="14" /></svg>
                         <div className="font-medium text-text-primary mt-2">Upload Banner Image</div>
                         <div className="text-text-secondary text-sm">Upload jpg, png images</div>
                       </>

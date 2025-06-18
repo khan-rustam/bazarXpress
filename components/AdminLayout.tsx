@@ -77,7 +77,6 @@ const menuItems = [
     title: "OTHER",
     items: [
       { name: "Banners", href: "/admin/banners", icon: ImageIcon },
-      { name: "Smart Banners", href: "/admin/smart-banners", icon: Sparkles },
       { name: "Blogs", href: "/admin/blog", icon: BookOpen },
      
       { name: "Enquiry", href: "/admin/enquiry", icon: Mail },

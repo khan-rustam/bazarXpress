@@ -138,32 +138,30 @@ const blogPosts = [
 const heroSlides = [
   {
     image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80",
-    headline: "Don't miss our amazing grocery deals",
-    subheadline: "Get up to 30% off on your first $150 purchase",
-    description: "We have prepared special discounts for you on grocery products. Don't miss these opportunities...",
-    button: { text: "Shop Now", href: "/shop" },
+    headline: "Paan corner",
+    description: "Your favourite paan shop is now online",
+    button: { text: "Sale ", href: "/shop" },
     buttonColor: "bg-brand-success hover:bg-brand-success-dark text-text-inverse",
-    highlight: "Get up to 30% off on your first $150 purchase",
+    highlight: null,
+  },
+];
+
+const heroCards = [
+  {
+    image: "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-07/pharmacy-WEB.jpg",
+    link: "/shop/pharmacy",
   },
   {
-    image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1200&q=80",
-    headline: "Fresh Fruits & Veggies Delivered",
-    subheadline: "Farm to Table Freshness",
-    description: "Order now and enjoy the best quality produce delivered to your door.",
-    button: { text: "Browse Produce", href: "/shop" },
-    buttonColor: "bg-brand-primary hover:bg-brand-primary-dark text-text-inverse",
-    highlight: "Farm to Table Freshness",
+    image: "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-07/Pet-Care_WEB.jpg",
+    link: "/shop/pharmacy",
+
   },
   {
-    image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1200&q=80",
-    headline: "Weekly Essentials at Great Prices",
-    subheadline: "Save More Every Week",
-    description: "Stock up on your weekly essentials and save big with our exclusive offers.",
-    button: { text: "See Offers", href: "/shop" },
-    buttonColor: "bg-brand-secondary hover:bg-brand-secondary-dark text-text-inverse",
-    highlight: "Save More Every Week",
+    image: "https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/layout-engine/2023-03/babycare-WEB.jpg",
+    link: "/shop/pharmacy",
+
   },
-]
+];
 
 export default function Home() {
   const [quickViewProduct, setQuickViewProduct] = useState(null)
@@ -228,20 +226,20 @@ export default function Home() {
       {NoticeBar}
       <Layout>
         {/* Hero Section */}
-        <section className="relative min-h-screen w-full overflow-hidden -mt-28">
+        <section className="relative w-full overflow-hidden mt-8 rounded-md px-0 sm:px-10" style={{ minHeight: '320px', maxHeight: '380px' }}>
           <Carousel opts={{ loop: true }} autoplay interval={4000}>
             <CarouselContent>
               {heroSlides.map((slide, idx) => (
                 <CarouselItem key={idx}>
-                  <div className="relative min-h-screen w-full flex items-center justify-start">
+                  <div className="relative w-full flex items-center justify-start min-h-[320px] max-h-[380px] rounded-2xl overflow-hidden">
                     <Image
                       src={slide.image}
                       alt={slide.headline}
                       fill
-                      className="object-cover w-full h-full"
+                      className="object-cover w-full h-full "
                       priority={idx === 0}
                     />
-                    <div className="absolute inset-0 bg-black/50" />
+                    <div className="absolute inset-0 bg-black/30" />
                     <div className="relative z-10 max-w-2xl ml-8 md:ml-20 text-left text-text-inverse animate-fade-in">
                       {slide.highlight && (
                         <div className="mb-4 text-brand-success font-semibold text-lg md:text-xl">{slide.highlight}</div>
@@ -261,17 +259,26 @@ export default function Home() {
               ))}
             </CarouselContent>
           </Carousel>
+        </section>
 
-          {/* Scroll Down Button */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30">
-            <button
-              onClick={() => document.getElementById('categories-section')?.scrollIntoView({ behavior: 'smooth' })}
-              className="p-3 bg-brand-primary hover:bg-brand-primary-dark text-white rounded-full transition-colors duration-300 animate-bounce shadow-lg"
-              aria-label="Scroll down"
+        {/* Cards Row Below Banner */}
+        <section className="w-full max-w-7xl mx-auto hidden md:flex flex-row gap-8 my-24">
+          {heroCards.map((card, idx) => (
+            <Link
+              href={card.link}
+              key={idx}
+              className="flex-1 rounded-xl overflow-hidden min-h-[235px] flex flex-col items-center justify-center group hover:shadow-xl hover:scale-105 transition-all duration-300 ease-in-out cursor-pointer"
             >
-              <ChevronDown className="h-6 w-6" />
-            </button>
-          </div>
+              <div className="relative w-full h-full flex flex-col items-center justify-center">
+                <Image 
+                  src={card.image} 
+                  alt="Hero card" 
+                  fill 
+                  className="object-contain w-full h-full" 
+                />
+              </div>
+            </Link>
+          ))}
         </section>
 
         {/* Category Section */}
