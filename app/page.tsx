@@ -226,12 +226,12 @@ export default function Home() {
       {NoticeBar}
       <Layout>
         {/* Hero Section */}
-        <section className="relative w-full overflow-hidden mt-8 rounded-md px-0 sm:px-10" style={{ minHeight: '320px', maxHeight: '380px' }}>
+        <section className="relative w-full overflow-hidden mt-6 rounded-md px-0 sm:px-10" style={{ minHeight: '320px', maxHeight: '380px' }}>
           <Carousel opts={{ loop: true }} autoplay interval={4000}>
             <CarouselContent>
               {heroSlides.map((slide, idx) => (
                 <CarouselItem key={idx}>
-                  <div className="relative w-full flex items-center justify-start min-h-[320px] max-h-[380px] rounded-2xl overflow-hidden">
+                  <div className="relative w-full flex items-center justify-start min-h-[280px] max-h-[320px] rounded-2xl overflow-hidden">
                     <Image
                       src={slide.image}
                       alt={slide.headline}
@@ -262,7 +262,7 @@ export default function Home() {
         </section>
 
         {/* Cards Row Below Banner */}
-        <section className="w-full max-w-7xl mx-auto hidden md:flex flex-row gap-8 my-24">
+        <section className="w-full max-w-7xl mx-auto hidden md:flex flex-row gap-8 my-10">
           {heroCards.map((card, idx) => (
             <Link
               href={card.link}
