@@ -23,7 +23,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
   return (
     <div className="space-y-4">
       {/* Main Image */}
-      <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden group">
+      <div className="relative aspect-square bg-surface-secondary rounded-lg overflow-hidden group">
         <Image
           src={images[currentImage] || "/placeholder.svg"}
           alt={`${productName} - Image ${currentImage + 1}`}
@@ -36,13 +36,13 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
           <>
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm hover:bg-white text-codGray p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-surface-primary/80 backdrop-blur-sm hover:bg-surface-primary text-text-primary p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm hover:bg-white text-codGray p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-surface-primary/80 backdrop-blur-sm hover:bg-surface-primary text-text-primary p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -51,7 +51,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
 
         {/* Image Counter */}
         {images.length > 1 && (
-          <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+          <div className="absolute bottom-4 right-4 bg-black/50 text-text-inverse px-3 py-1 rounded-full text-sm">
             {currentImage + 1} / {images.length}
           </div>
         )}
@@ -65,7 +65,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
               key={index}
               onClick={() => setCurrentImage(index)}
               className={`relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-colors ${
-                index === currentImage ? "border-spectra" : "border-gray-200 hover:border-gray-300"
+                index === currentImage ? "border-brand-primary" : "border-border-primary hover:border-border-secondary"
               }`}
             >
               <Image

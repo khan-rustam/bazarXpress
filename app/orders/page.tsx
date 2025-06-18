@@ -87,7 +87,7 @@ export default function Orders() {
       <div className="bg-gray-50 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="text-sm flex items-center space-x-2">
-            <Link href="/" className="text-gray-500 hover:text-spectra transition-colors">Home</Link>
+            <Link href="/" className="text-gray-500 hover:text-brand-primary transition-colors">Home</Link>
             <span className="text-gray-400">/</span>
             <span className="text-codGray font-medium">My Orders</span>
           </nav>
@@ -132,7 +132,7 @@ export default function Orders() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-bold text-spectra">${order.total.toFixed(2)}</p>
+                        <p className="text-lg font-bold text-brand-primary">${order.total.toFixed(2)}</p>
                         {order.trackingNumber && (
                           <p className="text-sm text-gray-500">Tracking: {order.trackingNumber}</p>
                         )}
@@ -159,19 +159,19 @@ export default function Orders() {
                   <div className="bg-gray-50 px-6 py-4 border-t">
                     <div className="flex items-center justify-between">
                       <div className="flex space-x-3">
-                        <button className="flex items-center space-x-2 text-spectra hover:text-elm font-medium">
+                        <button className="flex items-center space-x-2 text-brand-primary hover:text-brand-primary-dark font-medium">
                           <Eye className="h-4 w-4" />
                           <span>View Details</span>
                         </button>
                         {order.status === "delivered" && (
-                          <button className="text-spectra hover:text-elm font-medium">Write Review</button>
+                          <button className="text-brand-primary hover:text-brand-primary-dark font-medium">Write Review</button>
                         )}
                         {order.trackingNumber && (
-                          <button className="text-spectra hover:text-elm font-medium">Track Package</button>
+                          <button className="text-brand-primary hover:text-brand-primary-dark font-medium">Track Package</button>
                         )}
                       </div>
                       {order.status === "delivered" && (
-                        <button className="bg-spectra hover:bg-elm text-white px-4 py-2 rounded-lg transition-colors">
+                        <button className="bg-brand-primary hover:bg-brand-primary-dark text-white px-4 py-2 rounded-lg transition-colors">
                           Reorder
                         </button>
                       )}

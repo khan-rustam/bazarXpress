@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import Layout from "../../components/Layout"
-import { Mail, Phone, MapPin, Clock } from "lucide-react"
+import { Mail, Phone, MapPin, Clock, Home, ChevronRight } from "lucide-react"
 import Image from "next/image"
 import { RefreshCw, PercentCircle } from "lucide-react"
 import Link from "next/link"
@@ -35,18 +35,18 @@ export default function Contact() {
   return (
     <Layout>
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-4">
+      <div className="bg-surface-secondary py-4 animate-fade-in">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="text-sm flex items-center space-x-2">
-            <Link href="/" className="text-gray-500 hover:text-spectra transition-colors">Home</Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-codGray font-medium">Contact</span>
+            <Link href="/" className="text-text-secondary hover:text-brand-primary transition-colors">Home</Link>
+            <span className="text-text-tertiary">/</span>
+            <span className="text-text-primary font-medium">Contact</span>
           </nav>
         </div>
       </div>
 
       {/* Hero Section - Template Style */}
-      <section className="relative min-h-[420px] md:min-h-[500px] flex items-center justify-center overflow-hidden bg-gray-50">
+      <section className="relative min-h-[420px] md:min-h-[500px] flex items-center justify-center overflow-hidden bg-surface-secondary">
         {/* Background image */}
         <Image
           src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop"
@@ -59,9 +59,9 @@ export default function Contact() {
         <div className="absolute inset-0 bg-black/40 z-10" />
         <div className="relative z-20 w-full flex flex-col items-center justify-center min-h-[420px] py-12">
           <div className="bg-white/90 rounded-2xl shadow-2xl px-8 py-12 max-w-2xl mx-auto flex flex-col items-center text-center backdrop-blur-md">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-spectra">Ask Us Question</h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-spectra via-neptune to-elm rounded-full mb-6 animate-pulse" />
-            <p className="text-lg md:text-xl text-gray-700 font-medium">
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-brand-primary">Ask Us Question</h2>
+            <div className="w-20 h-1 bg-gradient-to-r from-brand-primary via-elm to-spectra rounded-full mb-6 animate-pulse" />
+            <p className="text-lg md:text-xl text-text-secondary font-medium">
               We'd love to hear from you. Send us a message and we'll respond as soon as possible.
             </p>
           </div>
@@ -72,11 +72,11 @@ export default function Contact() {
           {/* Contact Form */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-codGray mb-6">Send us a Message</h2>
+              <h2 className="text-2xl font-bold text-text-primary mb-6">Send us a Message</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-codGray mb-2">
+                    <label htmlFor="name" className="block text-sm font-medium text-text-primary mb-2">
                       Full Name
                     </label>
                     <input
@@ -86,12 +86,12 @@ export default function Contact() {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                       placeholder="Your full name"
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-codGray mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-text-primary mb-2">
                       Email Address
                     </label>
                     <input
@@ -101,13 +101,13 @@ export default function Contact() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                       placeholder="your.email@example.com"
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-codGray mb-2">
+                  <label htmlFor="subject" className="block text-sm font-medium text-text-primary mb-2">
                     Subject
                   </label>
                   <input
@@ -117,12 +117,12 @@ export default function Contact() {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     placeholder="What is this regarding?"
                   />
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-codGray mb-2">
+                  <label htmlFor="message" className="block text-sm font-medium text-text-primary mb-2">
                     Message
                   </label>
                   <textarea
@@ -132,13 +132,13 @@ export default function Contact() {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
                     placeholder="Tell us how we can help you..."
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-spectra hover:bg-elm text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  className="w-full bg-brand-primary hover:bg-elm text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                 >
                   Send Message
                 </button>
@@ -149,51 +149,51 @@ export default function Contact() {
           {/* Contact Information */}
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-codGray mb-6">Contact Information</h2>
+              <h2 className="text-2xl font-bold text-text-primary mb-6">Contact Information</h2>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-spectra rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center flex-shrink-0">
                     <Mail className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-codGray mb-1">Email</h3>
-                    <p className="text-gray-600">support@BazarXpress.com</p>
-                    <p className="text-gray-600">info@BazarXpress.com</p>
+                    <h3 className="font-semibold text-text-primary mb-1">Email</h3>
+                    <p className="text-text-secondary">support@BazarXpress.com</p>
+                    <p className="text-text-secondary">info@BazarXpress.com</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-neptune rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center flex-shrink-0">
                     <Phone className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-codGray mb-1">Phone</h3>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
-                    <p className="text-gray-600">+1 (555) 987-6543</p>
+                    <h3 className="font-semibold text-text-primary mb-1">Phone</h3>
+                    <p className="text-text-secondary">+1 (555) 123-4567</p>
+                    <p className="text-text-secondary">+1 (555) 987-6543</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-gulfStream rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center flex-shrink-0">
                     <MapPin className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-codGray mb-1">Address</h3>
-                    <p className="text-gray-600">123 Commerce Street</p>
-                    <p className="text-gray-600">Business District</p>
-                    <p className="text-gray-600">New York, NY 10001</p>
+                    <h3 className="font-semibold text-text-primary mb-1">Address</h3>
+                    <p className="text-text-secondary">123 Commerce Street</p>
+                    <p className="text-text-secondary">Business District</p>
+                    <p className="text-text-secondary">New York, NY 10001</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-mountbattenPink rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center flex-shrink-0">
                     <Clock className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-codGray mb-1">Business Hours</h3>
-                    <p className="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                    <p className="text-gray-600">Saturday: 10:00 AM - 4:00 PM</p>
-                    <p className="text-gray-600">Sunday: Closed</p>
+                    <h3 className="font-semibold text-text-primary mb-1">Business Hours</h3>
+                    <p className="text-text-secondary">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                    <p className="text-text-secondary">Saturday: 10:00 AM - 4:00 PM</p>
+                    <p className="text-text-secondary">Sunday: Closed</p>
                   </div>
                 </div>
               </div>
@@ -203,21 +203,21 @@ export default function Contact() {
       </div>
 
       {/* Map Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-surface-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-codGray mb-4">Visit Our Store</h2>
-            <p className="text-gray-600">
+            <h2 className="text-3xl font-bold text-text-primary mb-4">Visit Our Store</h2>
+            <p className="text-text-secondary">
               Come visit us at our flagship location in the heart of the business district.
             </p>
           </div>
-          <div className="bg-gray-300 rounded-lg h-96 flex items-center justify-center">
-            <p className="text-gray-600">Interactive Map Placeholder</p>
+          <div className="bg-border-primary rounded-lg h-96 flex items-center justify-center overflow-hidden">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56955.92488451979!2d75.68514704704289!3d26.84805204803522!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db5002b06f021%3A0xd185d5cef7c94b3c!2sBlinkit%20Store!5e0!3m2!1sen!2sin!4v1750165623745!5m2=1en!2sin" width="100%" height="100%" style={{ border: "0" }} loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
           </div>
         </div>
       </section>
 
-   
+
     </Layout>
   )
 }

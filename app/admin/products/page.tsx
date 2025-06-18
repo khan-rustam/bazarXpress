@@ -1,20 +1,22 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "../../../components/AdminLayout"
-import { getCurrentUser } from "../../../lib/auth"
+import { getCurrentUser, type User } from "../../../lib/auth"
 import { products } from "../../../lib/products"
 import { Search, Filter, MoreHorizontal, Edit, Trash2, Plus, Eye, Package } from "lucide-react"
 import Image from "next/image"
 
 export default function AdminProducts() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<User | null>(null)
   const [productList, setProductList] = useState(products)
   const [searchTerm, setSearchTerm] = useState("")
+  const [showSuggestions, setShowSuggestions] = useState(false)
   const [filterCategory, setFilterCategory] = useState("all")
   const [filterStatus, setFilterStatus] = useState("all")
   const router = useRouter()
+  const searchRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const currentUser = getCurrentUser()
@@ -24,6 +26,19 @@ export default function AdminProducts() {
     }
     setUser(currentUser)
   }, [router])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const categories = ["all", ...Array.from(new Set(products.map((p) => p.category)))]
 
@@ -39,11 +54,21 @@ export default function AdminProducts() {
     return matchesSearch && matchesCategory && matchesStatus
   })
 
+  const searchSuggestions = productList
+    .filter((product) => {
+      const searchLower = searchTerm.toLowerCase()
+      return (
+        product.name.toLowerCase().includes(searchLower) ||
+        product.brand.toLowerCase().includes(searchLower)
+      )
+    })
+    .slice(0, 5) // Limit to 5 suggestions
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-spectra mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>
@@ -59,7 +84,7 @@ export default function AdminProducts() {
             <h2 className="text-2xl font-bold text-codGray">Products Management</h2>
             <p className="text-gray-600">Manage your product inventory</p>
           </div>
-          <button className="bg-spectra hover:bg-elm text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
+          <button className="bg-brand-primary hover:bg-brand-primary-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
             <Plus className="h-4 w-4" />
             <span>Add Product</span>
           </button>
@@ -80,9 +105,9 @@ export default function AdminProducts() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">In Stock</p>
-                <p className="text-2xl font-bold text-green-600">{products.filter((p) => p.inStock).length}</p>
+                <p className="text-2xl font-bold text-brand-primary">{products.filter((p) => p.inStock).length}</p>
               </div>
-              <Package className="h-8 w-8 text-green-500" />
+              <Package className="h-8 w-8 text-brand-primary" />
             </div>
           </div>
           <div className="bg-white rounded-lg p-6 shadow-md">
@@ -108,20 +133,54 @@ export default function AdminProducts() {
         {/* Filters */}
         <div className="bg-white rounded-lg p-6 shadow-md">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative">
+            <div className="relative" ref={searchRef}>
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+                onChange={(e) => {
+                  setSearchTerm(e.target.value)
+                  setShowSuggestions(true)
+                }}
+                onFocus={() => setShowSuggestions(true)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
               />
+              {showSuggestions && searchTerm && searchSuggestions.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-80 overflow-y-auto">
+                  {searchSuggestions.map((product) => (
+                    <button
+                      key={product.id}
+                      onClick={() => {
+                        setSearchTerm(product.name)
+                        setShowSuggestions(false)
+                      }}
+                      className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-3 border-b border-gray-100 last:border-b-0"
+                    >
+                      <div className="relative w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                        <Image
+                          src={product.images[0] || "/placeholder.svg"}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-codGray truncate">{product.name}</p>
+                        <p className="text-sm text-gray-500 truncate">{product.brand}</p>
+                      </div>
+                      <div className="text-sm text-brand-primary font-medium">
+                        ${product.price}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-spectra"
+              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary"
             >
               {categories.map((category) => (
                 <option key={category} value={category}>
@@ -132,16 +191,12 @@ export default function AdminProducts() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-spectra"
+              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary"
             >
               <option value="all">All Status</option>
               <option value="in-stock">In Stock</option>
               <option value="out-of-stock">Out of Stock</option>
             </select>
-            <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
-              <Filter className="h-4 w-4" />
-              <span>More Filters</span>
-            </button>
           </div>
         </div>
 
@@ -196,8 +251,9 @@ export default function AdminProducts() {
                     </td>
                     <td className="py-4 px-6">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${product.inStock ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                          }`}
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          product.inStock ? "bg-brand-primary/10 text-brand-primary" : "bg-red-100 text-red-800"
+                        }`}
                       >
                         {product.inStock ? "In Stock" : "Out of Stock"}
                       </span>
@@ -205,17 +261,14 @@ export default function AdminProducts() {
 
                     <td className="py-4 px-6">
                       <div className="flex items-center space-x-2">
-                        <button className="p-1 text-gray-400 hover:text-spectra transition-colors">
+                        <button className="p-1 text-text-tertiary hover:text-brand-primary transition-colors">
                           <Eye className="h-4 w-4" />
                         </button>
-                        <button className="p-1 text-gray-400 hover:text-spectra transition-colors">
+                        <button className="p-1 text-text-tertiary hover:text-brand-primary transition-colors">
                           <Edit className="h-4 w-4" />
                         </button>
-                        <button className="p-1 text-gray-400 hover:text-red-500 transition-colors">
+                        <button className="p-1 text-text-tertiary hover:text-brand-error transition-colors">
                           <Trash2 className="h-4 w-4" />
-                        </button>
-                        <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors">
-                          <MoreHorizontal className="h-4 w-4" />
                         </button>
                       </div>
                     </td>
@@ -235,7 +288,7 @@ export default function AdminProducts() {
             <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors">
               Previous
             </button>
-            <button className="px-3 py-1 bg-spectra text-white rounded text-sm">1</button>
+            <button className="px-3 py-1 bg-brand-primary text-white rounded text-sm">1</button>
             <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors">
               2
             </button>

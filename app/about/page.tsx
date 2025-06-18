@@ -5,7 +5,7 @@ import Image from "next/image"
 import { Users, Award, Truck, Shield } from "lucide-react"
 import Particles from "react-tsparticles"
 import { FaLinkedin, FaTwitter, FaFacebook } from "react-icons/fa"
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 import Link from "next/link"
 
 const features = [
@@ -62,6 +62,9 @@ const aboutStats = [
 
 export default function About() {
   const storyRef = useRef<HTMLDivElement | null>(null)
+  const statsSectionRef = useRef<HTMLDivElement | null>(null)
+  const [hasAnimated, setHasAnimated] = useState(false)
+
   // Count up animation for stats
   useEffect(() => {
     const animateCount = (el: HTMLElement, target: number) => {
@@ -80,21 +83,45 @@ export default function About() {
       };
       step();
     };
-    document.querySelectorAll("[data-count]").forEach((el) => {
-      const attr = el.getAttribute("data-count");
-      if (attr) animateCount(el as HTMLElement, parseInt(attr));
-    });
-  }, []);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            document.querySelectorAll("[data-count]").forEach((el) => {
+              const attr = el.getAttribute("data-count");
+              if (attr) animateCount(el as HTMLElement, parseInt(attr));
+            });
+            setHasAnimated(true);
+            observer.disconnect(); // Disconnect after animation to prevent re-triggering
+          }
+        });
+      },
+      {
+        threshold: 0.5, // Trigger when 50% of the section is visible
+      }
+    );
+
+    if (statsSectionRef.current) {
+      observer.observe(statsSectionRef.current);
+    }
+
+    return () => {
+      if (statsSectionRef.current) {
+        observer.unobserve(statsSectionRef.current);
+      }
+    };
+  }, [hasAnimated]);
 
   return (
     <Layout>
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-4 animate-fade-in">
+      <div className="bg-surface-secondary py-4 animate-fade-in">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="text-sm flex items-center space-x-2">
-            <Link href="/" className="text-gray-500 hover:text-spectra transition-colors">Home</Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-codGray font-medium">About</span>
+            <Link href="/" className="text-text-secondary hover:text-brand-primary transition-colors">Home</Link>
+            <span className="text-text-tertiary">/</span>
+            <span className="text-text-primary font-medium">About</span>
           </nav>
         </div>
       </div>
@@ -112,30 +139,11 @@ export default function About() {
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/60 z-10" />
         <div className="relative z-20 w-full max-w-4xl mx-auto px-4 text-center flex flex-col items-center justify-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6 drop-shadow-xl">Do You Want To Know Us?</h1>
-          <p className="text-sm md:text-lg text-gray-100 mb-8 max-w-2xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-text-inverse mb-6 drop-shadow-xl">Do You Want To Know Us?</h1>
+          <p className="text-sm md:text-lg text-text-inverse/90 mb-8 max-w-2xl mx-auto">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque pretium mollis ex, vel interdum augue faucibus sit amet. Proin tempor purus ac suscipit sagittis. Nunc finibus euismod enim, eu finibus nunc ullamcorper et.
           </p>
          
-        </div>
-        {/* Floating stats card */}
-        <div className="absolute left-1/2 md:bottom-2 -translate-x-1/2 w-[95%] md:w-4/5 lg:w-3/4 bg-[#eaeddc] rounded-2xl shadow-2xl flex flex-col md:flex-row items-center justify-between px-4 py-2 md:py-4 gap-8 z-30 border border-gray-100">
-          <div className="flex flex-col items-center flex-1">
-            <div className="text-3xl md:text-4xl font-extrabold text-codGray mb-1" data-count="60000000">0</div>
-            <div className="text-gray-700 text-base md:text-lg font-medium text-center">Happy Customers</div>
-          </div>
-          <div className="flex flex-col items-center flex-1">
-            <div className="text-3xl md:text-4xl font-extrabold text-codGray mb-1" data-count="105000000">0</div>
-            <div className="text-gray-700 text-base md:text-lg font-medium text-center">Grocery Products</div>
-          </div>
-          <div className="flex flex-col items-center flex-1">
-            <div className="text-3xl md:text-4xl font-extrabold text-codGray mb-1" data-count="80000">0</div>
-            <div className="text-gray-700 text-base md:text-lg font-medium text-center">Active Salesman</div>
-          </div>
-          <div className="flex flex-col items-center flex-1">
-            <div className="text-3xl md:text-4xl font-extrabold text-codGray mb-1" data-count="60000">0</div>
-            <div className="text-gray-700 text-base md:text-lg font-medium text-center">Store Worldwide</div>
-          </div>
         </div>
       </section>
 
@@ -144,19 +152,19 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-codGray mb-6">Our Story</h2>
-              <div className="space-y-4 text-gray-600">
-                <p>
+              <h2 className="text-3xl font-bold text-text-primary mb-6">Our Story</h2>
+              <div className="space-y-4 text-text-primary">
+                <p className="text-justify">
                   Founded in 2020, BazarXpress started as a small online marketplace with a big dream: to make quality
                   products accessible to everyone, everywhere. What began as a passion project has grown into a trusted
                   platform serving thousands of customers worldwide.
                 </p>
-                <p>
+                <p className="text-justify">
                   Our journey has been driven by a simple belief - that everyone deserves access to high-quality
                   products at fair prices, backed by exceptional customer service. We've built our reputation on trust,
                   reliability, and a commitment to excellence that shows in everything we do.
                 </p>
-                <p>
+                <p className="text-justify">
                   Today, we're proud to offer an extensive catalog of carefully curated products across multiple
                   categories, from the latest electronics to sustainable fashion, home essentials, and beyond.
                 </p>
@@ -191,18 +199,18 @@ export default function About() {
               <div className="absolute inset-0 rounded-lg bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             </div>
             <div className="order-1 md:order-2">
-              <h2 className="text-3xl font-bold text-codGray mb-6">Our Mission</h2>
-              <div className="space-y-4 text-gray-600">
-                <p>
+              <h2 className="text-3xl font-bold text-text-primary mb-6">Our Mission</h2>
+              <div className="space-y-4 text-text-primary">
+                <p className="text-justify">
                   At BazarXpress, our mission is to revolutionize the online shopping experience by combining an
                   extensive product selection with unparalleled customer service and competitive pricing.
                 </p>
-                <p>
+                <p className="text-justify">
                   We strive to be more than just an e-commerce platform - we aim to be your trusted shopping companion,
                   helping you discover products that enhance your lifestyle while providing a seamless, secure, and
                   enjoyable shopping experience.
                 </p>
-                <p>
+                <p className="text-justify">
                   Our commitment extends beyond transactions to building lasting relationships with our customers,
                   partners, and communities, fostering trust and satisfaction in every interaction.
                 </p>
@@ -216,8 +224,8 @@ export default function About() {
       <section className="py-16 animate-fade-in">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-codGray mb-4">Why Choose BazarXpress?</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold text-text-primary mb-4">Why Choose BazarXpress?</h2>
+            <p className="text-text-primary max-w-2xl mx-auto text-center">
               We're committed to providing you with the best shopping experience through our core values and principles.
             </p>
           </div>
@@ -228,11 +236,11 @@ export default function About() {
                 key={index}
                 className={`text-center bg-white rounded-xl shadow-md p-8 group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-transparent hover:border-spectra/40 cursor-pointer animate-fade-in delay-${index * 100}`}
               >
-                <div className="w-16 h-16 bg-spectra rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-elm transition-colors duration-300 shadow-lg">
+                <div className="w-16 h-16 bg-brand-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-brand-primary transition-colors duration-300 shadow-lg">
                   <feature.icon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-codGray mb-3 group-hover:text-spectra transition-colors duration-300">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <h3 className="text-xl font-semibold text-text-primary mb-3 group-hover:text-spectra transition-colors duration-300">{feature.title}</h3>
+                <p className="text-text-primary text-center">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -243,8 +251,8 @@ export default function About() {
       <section className="py-16 bg-gray-50 animate-slide-up">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-codGray mb-4">Meet Our Team</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold text-text-primary mb-4">Meet Our Team</h2>
+            <p className="text-text-primary max-w-2xl mx-auto">
               Behind BazarXpress is a dedicated team of professionals committed to making your shopping experience
               exceptional.
             </p>
@@ -266,15 +274,15 @@ export default function About() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   {/* Social icons */}
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <a href="#" className="text-spectra hover:text-elm"><FaLinkedin size={22} /></a>
-                    <a href="#" className="text-spectra hover:text-elm"><FaTwitter size={22} /></a>
-                    <a href="#" className="text-spectra hover:text-elm"><FaFacebook size={22} /></a>
+                    <a href="#" className="text-text-inverse hover:text-brand-primary"><FaLinkedin size={22} /></a>
+                    <a href="#" className="text-text-inverse hover:text-brand-primary"><FaTwitter size={22} /></a>
+                    <a href="#" className="text-text-inverse hover:text-brand-primary"><FaFacebook size={22} /></a>
                   </div>
                 </div>
                 <div className="p-6 text-center">
-                  <h3 className="text-xl font-semibold text-codGray mb-1 group-hover:text-elm transition-colors duration-300">{member.name}</h3>
-                  <p className="text-spectra font-medium mb-3">{member.role}</p>
-                  <p className="text-gray-600 text-sm">{member.bio}</p>
+                  <h3 className="text-xl font-semibold text-text-primary mb-1 group-hover:text-brand-primary transition-colors duration-300">{member.name}</h3>
+                  <p className="text-brand-primary font-medium mb-3">{member.role}</p>
+                  <p className="text-text-primary text-sm">{member.bio}</p>
                 </div>
               </div>
             ))}
@@ -283,25 +291,27 @@ export default function About() {
       </section>
 
       {/* Stats */}
-      <section className="py-16 bg-gradient-to-r from-martinique to-codGray animate-fade-in">
+      <section ref={statsSectionRef} className="py-20 bg-surface-primary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            <div className="animate-bounce-in">
-              <div className="text-4xl font-bold text-neptune mb-2" data-count="50000">0</div>
-              <div className="text-white">Happy Customers</div>
-            </div>
-            <div className="animate-bounce-in delay-100">
-              <div className="text-4xl font-bold text-neptune mb-2" data-count="10000">0</div>
-              <div className="text-white">Products</div>
-            </div>
-            <div className="animate-bounce-in delay-200">
-              <div className="text-4xl font-bold text-neptune mb-2" data-count="99">0</div>
-              <div className="text-white">Uptime</div>
-            </div>
-            <div className="animate-bounce-in delay-300">
-              <div className="text-4xl font-bold text-neptune mb-2" data-count="24">0</div>
-              <div className="text-white">Support</div>
-            </div>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">Our Impact in Numbers</h2>
+            <p className="text-text-secondary max-w-2xl mx-auto">
+              We're proud of our growth and the impact we've made in the e-commerce industry.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {aboutStats.map((stat, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl p-8 border border-border-primary hover:border-brand-primary/40 transition-all duration-300 group shadow-md hover:shadow-lg"
+              >
+                <div className="flex flex-col items-center">
+                  <div className="text-4xl md:text-5xl font-bold text-brand-primary mb-2 group-hover:scale-110 transition-transform duration-300" data-count={parseInt(stat.value)}>{stat.value}</div>
+                  <div className="text-text-primary font-medium">{stat.label}</div>
+                  <div className="w-16 h-1 bg-brand-primary rounded-full mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -317,11 +327,3 @@ export default function About() {
     </Layout>
   )
 }
-
-// Add animation classes to your global CSS (e.g., in app/globals.css):
-// .animate-fade-in { @apply opacity-0 animate-fadeIn; animation: fadeIn 1s forwards; }
-// .animate-slide-up { @apply opacity-0 animate-slideUp; animation: slideUp 1s forwards; }
-// .animate-bounce-in { @apply opacity-0 animate-bounceIn; animation: bounceIn 1s forwards; }
-// @keyframes fadeIn { to { opacity: 1; } }
-// @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
-// @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.8); } 60% { opacity: 1; transform: scale(1.05); } 100% { transform: scale(1); } }

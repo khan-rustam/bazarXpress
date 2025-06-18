@@ -174,7 +174,7 @@ function ShopContent() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-spectra"
+              className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-brand-primary"
             >
               <option value="name">Sort by Name</option>
               <option value="price-low">Price: Low to High</option>
@@ -188,13 +188,13 @@ function ShopContent() {
           <div className="flex border border-gray-300 rounded-lg overflow-hidden">
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-2 ${viewMode === "grid" ? "bg-spectra text-white" : "bg-white text-gray-600"}`}
+              className={`p-2 ${viewMode === "grid" ? "bg-brand-primary text-white" : "bg-white text-gray-600"}`}
             >
               <Grid className="h-5 w-5" />
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`p-2 ${viewMode === "list" ? "bg-spectra text-white" : "bg-white text-gray-600"}`}
+              className={`p-2 ${viewMode === "list" ? "bg-brand-primary text-white" : "bg-white text-gray-600"}`}
             >
               <List className="h-5 w-5" />
             </button>
@@ -203,7 +203,7 @@ function ShopContent() {
           {/* Mobile Filter Toggle */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="md:hidden flex items-center space-x-2 bg-spectra text-white px-4 py-2 rounded-lg"
+            className="md:hidden flex items-center space-x-2 bg-brand-primary text-white px-4 py-2 rounded-lg"
           >
             <Filter className="h-5 w-5" />
             <span>Filters</span>
@@ -225,7 +225,7 @@ function ShopContent() {
                     value={category}
                     checked={selectedCategory === category}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="text-spectra focus:ring-spectra"
+                    className="text-brand-primary focus:ring-brand-primary"
                   />
                   <span className="ml-2 text-gray-700">{category}</span>
                 </label>
@@ -299,7 +299,7 @@ function ShopContent() {
                             <span className="text-sm text-gray-500 ml-1">({product.rating})</span>
                           </div>
                           <div className="flex items-center space-x-2 mb-4">
-                            <span className="text-2xl font-bold text-spectra">${product.price}</span>
+                            <span className="text-2xl font-bold text-brand-primary">${product.price}</span>
                             {product.originalPrice && (
                               <span className="text-lg text-gray-500 line-through">${product.originalPrice}</span>
                             )}
@@ -308,11 +308,11 @@ function ShopContent() {
                         <div className="flex flex-col space-y-2 ml-4">
                           <button
                             onClick={() => handleQuickView(product)}
-                            className="bg-gray-100 hover:bg-gray-200 text-codGray px-4 py-2 rounded-lg transition-colors"
+                            className="bg-surface-tertiary hover:bg-surface-tertiary-dark text-codGray px-4 py-2 rounded-lg transition-colors"
                           >
                             Quick View
                           </button>
-                          <button className="bg-spectra hover:bg-elm text-white px-4 py-2 rounded-lg transition-colors">
+                          <button className="bg-brand-primary hover:bg-brand-primary-dark text-white px-4 py-2 rounded-lg transition-colors">
                             Add to Cart
                           </button>
                         </div>

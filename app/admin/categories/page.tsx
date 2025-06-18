@@ -65,6 +65,7 @@ export default function AdminCategories() {
     popular: false,
   })
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [editingCategory, setEditingCategory] = useState<any | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function AdminCategories() {
       router.push("/")
       return
     }
-    setUser(currentUser)
+    setUser(() => currentUser as any)
   }, [router])
 
   const filteredCategories = categories.filter(
@@ -112,12 +113,49 @@ export default function AdminCategories() {
     }
   }
 
+  const openEditCategory = (category: any) => {
+    setEditingCategory(category)
+    setNewCategory({
+      name: category.name,
+      parentId: category.parentId || "",
+      image: null,
+      description: category.description,
+      status: category.status,
+      hide: category.hide || false,
+      popular: category.popular || false,
+    })
+    setImagePreview(category.image || null)
+    setShowModal(true)
+  }
+
+  const handleEditCategory = (e: React.FormEvent) => {
+    e.preventDefault()
+    setCategories(categories.map(cat => cat.id === editingCategory.id ? {
+      ...editingCategory,
+      name: newCategory.name,
+      parentId: newCategory.parentId,
+      image: imagePreview,
+      description: newCategory.description,
+      status: newCategory.status,
+      hide: newCategory.hide,
+      popular: newCategory.popular,
+    } : cat))
+    setShowModal(false)
+    setEditingCategory(null)
+    setNewCategory({ name: "", parentId: "", image: null, description: "", status: "active", hide: false, popular: false })
+    setImagePreview(null)
+  }
+
+  const handleDeleteCategory = (id: string) => {
+    setCategories(categories.filter(cat => cat.id !== id))
+  }
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-spectra mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
+          <p className="text-text-secondary">Loading...</p>
         </div>
       </div>
     )
@@ -129,11 +167,11 @@ export default function AdminCategories() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-codGray">Categories Management</h2>
-            <p className="text-gray-600">Organize your products into categories</p>
+            <h2 className="text-2xl font-bold text-text-primary">Categories Management</h2>
+            <p className="text-text-secondary">Organize your products into categories</p>
           </div>
           <button
-            className="bg-spectra hover:bg-elm text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+            className="bg-brand-primary hover:bg-brand-primary-dark text-text-inverse px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
             onClick={() => setShowModal(true)}
           >
             <Plus className="h-4 w-4" />
@@ -142,50 +180,55 @@ export default function AdminCategories() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg p-6 shadow-md">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-surface-primary rounded-lg p-6 shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Categories</p>
-                <p className="text-2xl font-bold text-codGray">{categories.length}</p>
+                <p className="text-sm font-medium text-text-secondary">Total Categories</p>
+                <p className="text-2xl font-bold text-text-primary">{categories.length}</p>
               </div>
-              <Grid3X3 className="h-8 w-8 text-blue-500" />
+              <Grid3X3 className="h-8 w-8 text-brand-info" />
             </div>
           </div>
-          <div className="bg-white rounded-lg p-6 shadow-md">
+          <div className="bg-surface-primary rounded-lg p-6 shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Active Categories</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {categories.filter((c) => c.status === "active").length}
-                </p>
+                <p className="text-sm font-medium text-text-secondary">Active Categories</p>
+                <p className="text-2xl font-bold text-brand-success">{categories.filter((c) => c.status === "active").length}</p>
               </div>
-              <Grid3X3 className="h-8 w-8 text-green-500" />
+              <Grid3X3 className="h-8 w-8 text-brand-success" />
             </div>
           </div>
-          <div className="bg-white rounded-lg p-6 shadow-md">
+          <div className="bg-surface-primary rounded-lg p-6 shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Products</p>
-                <p className="text-2xl font-bold text-purple-600">
-                  {categories.reduce((sum, c) => sum + c.productCount, 0)}
-                </p>
+                <p className="text-sm font-medium text-text-secondary">Inactive Categories</p>
+                <p className="text-2xl font-bold text-brand-error">{categories.filter((c) => c.status === "inactive").length}</p>
               </div>
-              <Grid3X3 className="h-8 w-8 text-purple-500" />
+              <Grid3X3 className="h-8 w-8 text-brand-error" />
+            </div>
+          </div>
+          <div className="bg-surface-primary rounded-lg p-6 shadow-md">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-text-secondary">Total Products</p>
+                <p className="text-2xl font-bold text-brand-primary">{categories.reduce((sum, c) => sum + c.productCount, 0)}</p>
+              </div>
+              <Grid3X3 className="h-8 w-8 text-brand-primary" />
             </div>
           </div>
         </div>
 
         {/* Search */}
-        <div className="bg-white rounded-lg p-6 shadow-md">
+        <div className="bg-surface-primary rounded-lg p-6 shadow-md">
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-5 w-5 text-text-tertiary" />
             <input
               type="text"
               placeholder="Search categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+              className="w-full pl-10 pr-4 py-2 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
         </div>
@@ -193,12 +236,12 @@ export default function AdminCategories() {
         {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCategories.map((category) => (
-            <div key={category.id} className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+            <div key={category.id} className="bg-surface-primary rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-codGray mb-2">{category.name}</h3>
-                  <p className="text-gray-600 text-sm mb-3">{category.description}</p>
-                  <div className="flex items-center space-x-4 text-sm text-gray-500">
+                  <h3 className="text-lg font-semibold text-text-primary mb-2">{category.name}</h3>
+                  <p className="text-text-secondary text-sm mb-3">{category.description}</p>
+                  <div className="flex items-center space-x-4 text-sm text-text-tertiary">
                     <span>{category.productCount} products</span>
                     <span>•</span>
                     <span>Created {new Date(category.createdDate).toLocaleDateString()}</span>
@@ -207,24 +250,21 @@ export default function AdminCategories() {
                 <div className="flex items-center space-x-2">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      category.status === "active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                      category.status === "active" ? "bg-brand-success/10 text-brand-success" : "bg-brand-error/10 text-brand-error"
                     }`}
                   >
-                    {category.status}
+                    {category.status.charAt(0).toUpperCase() + category.status.slice(1)}
                   </span>
-                  <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </button>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 pt-4 border-t border-gray-100">
-                <button className="flex-1 bg-spectra hover:bg-elm text-white py-2 px-3 rounded text-sm transition-colors">
+              <div className="flex items-center space-x-2 pt-4 border-t border-border-primary">
+                <button className="flex-1 bg-brand-primary hover:bg-brand-primary-dark text-text-inverse py-2 px-3 rounded text-sm transition-colors">
                   View Products
                 </button>
-                <button className="p-2 text-gray-400 hover:text-spectra transition-colors">
+                <button className="p-2 text-text-tertiary hover:text-brand-primary transition-colors" onClick={() => openEditCategory(category)}>
                   <Edit className="h-4 w-4" />
                 </button>
-                <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                <button className="p-2 text-text-tertiary hover:text-brand-error transition-colors" onClick={() => handleDeleteCategory(category.id)}>
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
@@ -235,33 +275,25 @@ export default function AdminCategories() {
         {/* Modal for Add Category */}
         {showModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
-            <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 p-8 relative">
+            <div className="bg-surface-primary rounded-lg shadow-lg max-w-2xl w-full mx-4 p-8 relative">
               <div className="flex items-center justify-between mb-6">
-                <div className="text-2xl font-semibold">Create category</div>
-                <button
-                  type="submit"
-                  form="add-category-form"
-                  className="bg-gray-400 hover:bg-spectra text-white font-semibold py-2 px-6 rounded-lg transition-colors flex items-center gap-2"
-                >
-                  <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="11" x2="21" y2="11"/><line x1="19" y1="9" x2="19" y2="13"/></svg>
-                  Save
-                </button>
+                <div className="text-2xl font-semibold text-text-primary">{editingCategory ? "Edit category" : "Create category"}</div>
               </div>
-              <form id="add-category-form" onSubmit={handleAddCategory} className="space-y-6">
+              <form id="add-category-form" onSubmit={editingCategory ? handleEditCategory : handleAddCategory} className="space-y-6">
                 <div>
                   <label className="block font-medium mb-1">Category title <span className="text-red-500">*</span></label>
                   <input
                     type="text"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-spectra"
+                    className="w-full border border-border-primary rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     value={newCategory.name}
                     onChange={e => setNewCategory({ ...newCategory, name: e.target.value })}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">Select parent category <span className="text-gray-400">(Optional)</span></label>
+                  <label className="block font-medium mb-1">Select parent category <span className="text-text-tertiary">(Optional)</span></label>
                   <select
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-spectra"
+                    className="w-full border border-border-primary rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-brand-primary"
                     value={newCategory.parentId}
                     onChange={e => setNewCategory({ ...newCategory, parentId: e.target.value })}
                   >
@@ -274,14 +306,14 @@ export default function AdminCategories() {
                 {/* Image upload UI */}
                 <div>
                   <label className="block font-medium mb-1">Upload Image</label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center py-8 cursor-pointer hover:border-spectra transition-colors" onClick={() => document.getElementById('cat-image-input')?.click()}>
+                  <div className="border-2 border-dashed border-border-primary rounded-lg flex flex-col items-center justify-center py-8 cursor-pointer hover:border-brand-primary transition-colors" onClick={() => document.getElementById('cat-image-input')?.click()}>
                     {imagePreview ? (
                       <img src={imagePreview} alt="Preview" className="h-32 object-contain mb-2" />
                     ) : (
                       <>
-                        <svg width="40" height="40" fill="none" stroke="#22223B" strokeWidth="2" viewBox="0 0 24 24"><path d="M16 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="8" rx="2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-                        <div className="font-medium text-codGray mt-2">Upload Image</div>
-                        <div className="text-gray-400 text-sm">Upload jpg, png images with a maximum size of 20 MB</div>
+                        <svg width="40" height="40" fill="none" stroke="currentColor" className="text-text-tertiary" strokeWidth="2" viewBox="0 0 24 24"><path d="M16 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="8" rx="2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+                        <div className="font-medium text-text-primary mt-2">Upload Image</div>
+                        <div className="text-text-tertiary text-sm">Upload jpg, png images with a maximum size of 20 MB</div>
                       </>
                     )}
                     <input
@@ -298,33 +330,33 @@ export default function AdminCategories() {
                   <label className="flex items-center gap-2 cursor-pointer select-none">
                     <input
                       type="checkbox"
-                      className="form-checkbox h-5 w-5 text-spectra rounded"
+                      className="form-checkbox h-5 w-5 text-brand-primary rounded"
                       checked={newCategory.hide}
                       onChange={e => setNewCategory({ ...newCategory, hide: e.target.checked })}
                     />
-                    <span className="text-codGray font-medium">Hide category</span>
+                    <span className="text-text-primary font-medium">Hide category</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer select-none">
                     <input
                       type="checkbox"
-                      className="form-checkbox h-5 w-5 text-spectra rounded"
+                      className="form-checkbox h-5 w-5 text-brand-primary rounded"
                       checked={newCategory.popular}
                       onChange={e => setNewCategory({ ...newCategory, popular: e.target.checked })}
                     />
-                    <span className="text-codGray font-medium">Popular</span>
+                    <span className="text-text-primary font-medium">Popular</span>
                   </label>
                 </div>
                 <div className="flex gap-2 mt-8">
                   <button
                     type="submit"
-                    className="bg-gray-400 hover:bg-spectra text-white font-semibold py-2 px-6 rounded-lg transition-colors flex items-center gap-2"
+                    className="bg-brand-primary hover:bg-brand-primary-dark text-text-primary hover:text-text-inverse font-semibold py-2 px-6 rounded-lg transition-colors flex items-center gap-2"
                   >
                     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="11" x2="21" y2="11"/><line x1="19" y1="9" x2="19" y2="13"/></svg>
                     Save
                   </button>
                   <button
                     type="button"
-                    className="bg-gray-200 hover:bg-gray-300 text-codGray font-semibold py-2 px-6 rounded-lg transition-colors"
+                    className="bg-surface-tertiary hover:bg-surface-tertiary-dark text-text-primary hover:bg-border-primary font-semibold py-2 px-6 rounded-lg transition-colors"
                     onClick={() => { setShowModal(false); setImagePreview(null); }}
                   >
                     Cancel
@@ -332,7 +364,7 @@ export default function AdminCategories() {
                 </div>
               </form>
               <button
-                className="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl"
+                className="absolute top-3 right-3 text-text-tertiary hover:text-brand-error text-2xl"
                 onClick={() => { setShowModal(false); setImagePreview(null); }}
                 aria-label="Close"
               >

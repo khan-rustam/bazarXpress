@@ -43,29 +43,29 @@ export default function Cart() {
   return (
     <Layout>
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-4">
+      <div className="bg-surface-secondary py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="text-sm flex items-center space-x-2">
-            <Link href="/" className="text-gray-500 hover:text-spectra transition-colors">Home</Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-codGray font-medium">Shopping Cart</span>
+            <Link href="/" className="text-text-secondary hover:text-brand-primary transition-colors">Home</Link>
+            <span className="text-text-tertiary">/</span>
+            <span className="text-text-primary font-medium">Shopping Cart</span>
           </nav>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-codGray mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl font-bold text-text-primary mb-8">Shopping Cart</h1>
 
         {cartItems.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <ShoppingBag className="h-12 w-12 text-gray-400" />
+            <div className="w-24 h-24 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+              <ShoppingBag className="h-12 w-12 text-text-tertiary" />
             </div>
-            <h2 className="text-2xl font-semibold text-codGray mb-4">Your cart is empty</h2>
-            <p className="text-gray-600 mb-8">Looks like you haven't added any items to your cart yet.</p>
+            <h2 className="text-2xl font-semibold text-text-primary mb-4">Your cart is empty</h2>
+            <p className="text-text-secondary mb-8">Looks like you haven't added any items to your cart yet.</p>
             <Link
               href="/shop"
-              className="inline-flex items-center bg-gradient-to-r from-spectra to-elm hover:from-elm hover:to-spectra text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 space-x-2"
+              className="inline-flex items-center bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 space-x-2"
             >
               <span>Continue Shopping</span>
               <ArrowRight className="h-5 w-5" />
@@ -88,25 +88,25 @@ export default function Cart() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-codGray truncate">{item.name}</h3>
-                      <p className="text-sm text-gray-500">{item.category}</p>
-                      <p className="text-lg font-bold text-spectra">${item.price.toFixed(2)}</p>
+                      <h3 className="text-lg font-semibold text-text-primary truncate">{item.name}</h3>
+                      <p className="text-sm text-text-secondary">{item.category}</p>
+                      <p className="text-lg font-bold text-brand-primary">${item.price.toFixed(2)}</p>
                     </div>
 
                     <div className="flex items-center space-x-3">
-                      <div className="flex items-center border border-gray-300 rounded-lg">
+                      <div className="flex items-center border border-border-primary rounded-lg">
                         <button
                           onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                          className="p-2 hover:bg-gray-100 transition-colors"
+                          className="p-2 hover:bg-surface-secondary transition-colors"
                         >
                           <Minus className="h-4 w-4" />
                         </button>
-                        <span className="px-4 py-2 border-x border-gray-300 min-w-[3rem] text-center">
+                        <span className="px-4 py-2 border-x border-border-primary min-w-[3rem] text-center">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                          className="p-2 hover:bg-gray-100 transition-colors"
+                          className="p-2 hover:bg-surface-secondary transition-colors"
                         >
                           <Plus className="h-4 w-4" />
                         </button>
@@ -127,42 +127,42 @@ export default function Cart() {
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
-                <h2 className="text-xl font-semibold text-codGray mb-6">Order Summary</h2>
+                <h2 className="text-xl font-semibold text-text-primary mb-6">Order Summary</h2>
 
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                    <span className="text-text-secondary">Subtotal</span>
+                    <span className="font-semibold text-text-primary">${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="font-semibold">{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                    <span className="text-text-secondary">Shipping</span>
+                    <span className="font-semibold text-text-primary">{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Tax</span>
-                    <span className="font-semibold">${tax.toFixed(2)}</span>
+                    <span className="text-text-secondary">Tax</span>
+                    <span className="font-semibold text-text-primary">${tax.toFixed(2)}</span>
                   </div>
-                  <div className="border-t pt-4">
+                  <div className="border-t border-border-primary pt-4">
                     <div className="flex justify-between">
-                      <span className="text-lg font-semibold text-codGray">Total</span>
-                      <span className="text-lg font-bold text-spectra">${total.toFixed(2)}</span>
+                      <span className="text-lg font-semibold text-text-primary">Total</span>
+                      <span className="text-lg font-bold text-brand-primary">${total.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
 
                 {shipping > 0 && (
-                  <div className="bg-neptune/10 border border-neptune/20 rounded-lg p-4 mb-6">
-                    <p className="text-sm text-neptune">
+                  <div className="bg-brand-primary/10 border border-brand-primary/20 rounded-lg p-4 mb-6">
+                    <p className="text-brand-primary">
                       Add ${(100 - subtotal).toFixed(2)} more to get free shipping!
                     </p>
                   </div>
                 )}
 
-                <button className="w-full bg-gradient-to-r from-spectra to-elm hover:from-elm hover:to-spectra text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 mb-4">
+                <button className="w-full bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 mb-4">
                   Proceed to Checkout
                 </button>
 
-                <Link href="/shop" className="block text-center text-spectra hover:text-elm font-medium">
+                <Link href="/shop" className="block text-center text-brand-primary hover:text-brand-primary-dark font-medium">
                   Continue Shopping
                 </Link>
               </div>

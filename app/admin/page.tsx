@@ -162,7 +162,7 @@ export default function AdminDashboard() {
                                 : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
-                          {order.status}
+                          {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                         </span>
                       </td>
                     </tr>
@@ -195,15 +195,15 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-lg p-6 shadow-md">
           <h3 className="text-lg font-semibold text-codGray mb-4">Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button className="flex items-center justify-center space-x-2 bg-spectra hover:bg-elm text-white py-3 px-4 rounded-lg transition-colors">
+            <button className="flex items-center justify-center space-x-2 bg-brand-primary hover:bg-brand-primary-dark text-white py-3 px-4 rounded-lg transition-colors">
               <Package className="h-5 w-5" />
               <span>Add Product</span>
             </button>
-            <button className="flex items-center justify-center space-x-2 bg-neptune hover:bg-gulfStream text-white py-3 px-4 rounded-lg transition-colors">
+            <button className="flex items-center justify-center space-x-2 bg-brand-primary hover:bg-brand-primary-dark text-white py-3 px-4 rounded-lg transition-colors">
               <Eye className="h-5 w-5" />
               <span>View Orders</span>
             </button>
-            <button className="flex items-center justify-center space-x-2 bg-mountbattenPink hover:bg-amethystSmoke text-white py-3 px-4 rounded-lg transition-colors">
+            <button className="flex items-center justify-center space-x-2 bg-brand-primary hover:bg-brand-primary-dark text-white py-3 px-4 rounded-lg transition-colors">
               <Users className="h-5 w-5" />
               <span>Manage Users</span>
             </button>

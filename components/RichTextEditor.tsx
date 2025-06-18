@@ -25,7 +25,7 @@ const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
   }, [value, editor])
 
   return (
-    <div className="border border-gray-300 rounded-lg">
+    <div className="border border-border-primary rounded-lg">
       <EditorContent editor={editor} className="min-h-[120px] p-2" />
     </div>
   )

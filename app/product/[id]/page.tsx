@@ -53,7 +53,7 @@ export default function ProductDetail() {
 
   const wishlistToast = (message: string) =>
     toast(message, {
-      className: "!bg-mountbattenPink !text-white",
+      className: "!bg-brand-primary !text-white",
       progressClassName: "!bg-white/70",
       icon: <Heart className="text-white" />,
     })
@@ -105,7 +105,7 @@ export default function ProductDetail() {
       <Layout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-spectra mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
             <p className="text-gray-600">Loading product...</p>
           </div>
         </div>
@@ -123,7 +123,7 @@ export default function ProductDetail() {
             <p className="text-gray-600 mb-6">The product you're looking for doesn't exist.</p>
             <Link
               href="/shop"
-              className="bg-spectra hover:bg-elm text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              className="bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-3 px-6 rounded-lg transition-colors"
             >
               Continue Shopping
             </Link>
@@ -174,9 +174,9 @@ export default function ProductDetail() {
           <div className="space-y-6">
             {/* Badges */}
             <div className="flex space-x-2">
-              {product.isNew && <span className="bg-elm text-white text-sm px-3 py-1 rounded-full">New</span>}
+              {product.isNew && <span className="bg-brand-primary text-white text-sm px-3 py-1 rounded-full">New</span>}
               {product.isSale && discountPercentage > 0 && (
-                <span className="bg-mountbattenPink text-white text-sm px-3 py-1 rounded-full">
+                <span className="bg-brand-primary text-white text-sm px-3 py-1 rounded-full">
                   -{discountPercentage}% OFF
                 </span>
               )}
@@ -189,7 +189,7 @@ export default function ProductDetail() {
 
             {/* Title and Brand */}
             <div>
-              <p className="text-spectra font-medium mb-2">{product.brand}</p>
+              <p className="text-brand-primary font-medium mb-2">{product.brand}</p>
               <h1 className="text-3xl font-bold text-codGray mb-4">{product.name}</h1>
               <p className="text-sm text-gray-500">SKU: {product.sku}</p>
             </div>
@@ -213,7 +213,7 @@ export default function ProductDetail() {
 
             {/* Price */}
             <div className="flex items-center space-x-4">
-              <span className="text-3xl font-bold text-spectra">${product.price}</span>
+              <span className="text-3xl font-bold text-brand-primary">${product.price}</span>
               {product.originalPrice && (
                 <span className="text-xl text-gray-500 line-through">${product.originalPrice}</span>
               )}
@@ -278,7 +278,7 @@ export default function ProductDetail() {
                 <button
                   onClick={handleAddToCart}
                   disabled={!product.inStock}
-                  className="flex-1 bg-spectra hover:bg-elm text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                  className="flex-1 bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 >
                   <ShoppingCart className="h-5 w-5" />
                   <span>Add to Cart</span>
@@ -289,7 +289,7 @@ export default function ProductDetail() {
                   className={`p-3 border-2 rounded-lg transition-colors ${
                     inWishlist
                       ? "border-red-500 text-red-500 bg-red-50"
-                      : "border-gray-300 text-gray-600 hover:border-spectra hover:text-spectra"
+                      : "border-gray-300 text-gray-600 hover:border-brand-primary hover:text-brand-primary"
                   }`}
                 >
                   <Heart className={`h-5 w-5 ${inWishlist ? "fill-current" : ""}`} />
@@ -297,7 +297,7 @@ export default function ProductDetail() {
 
                 <button
                   onClick={handleShare}
-                  className="p-3 border-2 border-gray-300 text-gray-600 hover:border-spectra hover:text-spectra rounded-lg transition-colors"
+                  className="p-3 border-2 border-gray-300 text-gray-600 hover:border-brand-primary hover:text-brand-primary rounded-lg transition-colors"
                 >
                   <Share2 className="h-5 w-5" />
                 </button>
@@ -307,15 +307,15 @@ export default function ProductDetail() {
             {/* Shipping Info */}
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
               <div className="flex items-center space-x-3">
-                <Truck className="h-5 w-5 text-spectra" />
+                <Truck className="h-5 w-5 text-brand-primary" />
                 <span className="text-sm text-gray-700">Free shipping on orders over $100</span>
               </div>
               <div className="flex items-center space-x-3">
-                <RotateCcw className="h-5 w-5 text-spectra" />
+                <RotateCcw className="h-5 w-5 text-brand-primary" />
                 <span className="text-sm text-gray-700">30-day return policy</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Shield className="h-5 w-5 text-spectra" />
+                <Shield className="h-5 w-5 text-brand-primary" />
                 <span className="text-sm text-gray-700">2-year warranty included</span>
               </div>
             </div>
@@ -336,7 +336,7 @@ export default function ProductDetail() {
                   onClick={() => setSelectedTab(tab.key as any)}
                   className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
                     selectedTab === tab.key
-                      ? "border-spectra text-spectra"
+                      ? "border-brand-primary text-brand-primary"
                       : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                   }`}
                 >

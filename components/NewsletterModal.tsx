@@ -35,19 +35,19 @@ export default function NewsletterModal() {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 relative">
-        <button onClick={handleClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="bg-surface-primary rounded-lg shadow-xl max-w-md w-full mx-4 relative">
+        <button onClick={handleClose} className="absolute top-4 right-4 text-text-tertiary hover:text-text-secondary">
           <X className="h-6 w-6" />
         </button>
 
         <div className="p-8">
           <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-neptune rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-8 w-8 text-white" />
+            <div className="w-16 h-16 bg-brand-primary rounded-full flex items-center justify-center mx-auto mb-4">
+              <Mail className="h-8 w-8 text-text-inverse" />
             </div>
-            <h2 className="text-2xl font-bold text-codGray mb-2">Stay in the Loop!</h2>
-            <p className="text-gray-600">
+            <h2 className="text-2xl font-bold text-text-primary mb-2">Stay in the Loop!</h2>
+            <p className="text-text-secondary">
               Subscribe to our newsletter and get exclusive deals, new arrivals, and special offers delivered to your
               inbox.
             </p>
@@ -59,18 +59,18 @@ export default function NewsletterModal() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email address"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+              className="w-full px-4 py-3 border border-border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
               required
             />
             <button
               type="submit"
-              className="w-full bg-spectra hover:bg-elm text-white font-semibold py-3 rounded-lg transition-colors"
+              className="w-full bg-brand-primary hover:bg-brand-primary-dark text-text-inverse font-semibold py-3 rounded-lg transition-colors"
             >
               Subscribe Now
             </button>
           </form>
 
-          <p className="text-xs text-gray-500 text-center mt-4">We respect your privacy. Unsubscribe at any time.</p>
+          <p className="text-xs text-text-tertiary text-center mt-4">We respect your privacy. Unsubscribe at any time.</p>
         </div>
       </div>
     </div>

@@ -9,39 +9,39 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                // BazarExpress Brand Colors - Enhanced with proper HSL values
+                // BazarExpress Brand Colors - Matched to Logo
                 brand: {
-                    primary: "hsl(28, 100%, 45%)", // Rich Orange
-                    secondary: "hsl(195, 85%, 35%)", // Deep Teal
-                    accent: "hsl(280, 65%, 60%)", // Purple Accent
-                    success: "hsl(142, 76%, 36%)", // Green
-                    warning: "hsl(45, 93%, 47%)", // Amber
-                    error: "hsl(0, 84%, 60%)", // Red
-                    info: "hsl(217, 91%, 60%)", // Blue
+                    primary: "hsl(275, 56%, 60%)",     // Soft Violet (from top-right wing)
+                    'primary-dark': "hsl(275, 56%, 40%)", // Darker shade of primary
+                    secondary: "hsl(186, 43%, 45%)",   // Teal Green (from top-left wing)
+                    accent: "hsl(269, 45%, 50%)",      // Rich Purple (bottom wings)
+                    success: "hsl(142, 76%, 36%)",     // Keep for positive actions
+                    warning: "hsl(39, 100%, 50%)",     // Slightly softer amber
+                    error: "hsl(0, 84%, 60%)",         // Red (default)
+                    info: "hsl(217, 91%, 60%)",        // Blue (default)
                 },
                 surface: {
-                    primary: "hsl(0, 0%, 100%)", // White
-                    secondary: "hsl(210, 40%, 98%)", // Light Gray
-                    tertiary: "hsl(210, 40%, 95%)", // Lighter Gray
-                    hover: "hsl(210, 40%, 92%)", // Hover Gray
-                    active: "hsl(210, 40%, 88%)", // Active Gray
+                    primary: "hsl(0, 0%, 100%)",       // White
+                    secondary: "hsl(240, 20%, 97%)",   // Light lavender gray
+                    tertiary: "hsl(240, 20%, 93%)",
+                    'tertiary-dark': "hsl(240, 2.80%, 79.00%)",    // Lighter lavender gray
+                    hover: "hsl(240, 20%, 89%)",       // Hover lavender
+                    active: "hsl(240, 20%, 85%)",      // Active lavender
                 },
                 text: {
-                    primary: "hsl(222, 84%, 5%)", // Dark Blue Gray
-                    secondary: "hsl(215, 16%, 47%)", // Medium Gray
-                    tertiary: "hsl(215, 20%, 65%)", // Light Gray
-                    inverse: "hsl(0, 0%, 100%)", // White
-                    accent: "hsl(28, 100%, 45%)", // Brand Primary
+                    primary: "hsl(252, 15%, 15%)",     // Deep purple gray
+                    secondary: "hsl(252, 12%, 35%)",   // Soft medium purple gray
+                    tertiary: "hsl(252, 10%, 55%)",    // Light text gray
+                    inverse: "hsl(0, 0%, 100%)",       // White
+                    accent: "hsl(275, 56%, 60%)",      // Brand Primary for highlights
                 },
                 border: {
-                    primary: "hsl(214, 32%, 91%)", // Light Border
-                    secondary: "hsl(214, 32%, 85%)", // Medium Border
-                    accent: "hsl(28, 100%, 45%)", // Accent Border
+                    primary: "hsl(252, 20%, 85%)",     // Light lavender border
+                    secondary: "hsl(252, 20%, 75%)",   // Medium lavender border
+                    accent: "hsl(269, 45%, 50%)",      // Accent border
                 },
-                // Add flat border color for Tailwind utility class
-                border: "hsl(214, 32%, 91%)",
-                // Original BazarExpress colors for backward compatibility
-                codGray: "#070706",
+                border: "hsl(252, 20%, 85%)",          // Flat border color
+                codGray: "#070706",                    // Dark base
                 amethystSmoke: "#a38ea6",
                 bismark: "#477d82",
                 mobster: "#857a96",
@@ -76,5 +76,5 @@ module.exports = {
             },
         },
     },
-    plugins: [require("tailwindcss-animate")],
-}
+    plugins: [require("tailwindcss-animate"), require("tailwind-scrollbar-hide")],
+};

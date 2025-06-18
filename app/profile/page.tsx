@@ -80,7 +80,7 @@ export default function Profile() {
       <div className="bg-gray-50 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="text-sm flex items-center space-x-2">
-            <Link href="/" className="text-gray-500 hover:text-spectra transition-colors">Home</Link>
+            <Link href="/" className="text-gray-500 hover:text-brand-primary transition-colors">Home</Link>
             <span className="text-gray-400">/</span>
             <span className="text-codGray font-medium">Profile</span>
           </nav>
@@ -90,7 +90,7 @@ export default function Profile() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-spectra to-neptune px-8 py-12">
+          <div className="bg-gradient-to-r from-brand-primary to-brand-primary-dark px-8 py-12">
             <div className="flex items-center space-x-6">
               <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
                 <UserIcon className="h-12 w-12 text-white" />
@@ -112,7 +112,7 @@ export default function Profile() {
               {!isEditing ? (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="flex items-center space-x-2 bg-spectra hover:bg-elm text-white px-4 py-2 rounded-lg transition-colors"
+                  className="flex items-center space-x-2 bg-brand-primary hover:bg-brand-primary-dark text-white px-4 py-2 rounded-lg transition-colors"
                 >
                   <Edit3 className="h-4 w-4" />
                   <span>Edit Profile</span>
@@ -149,7 +149,7 @@ export default function Profile() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 ) : (
                   <p className="px-4 py-3 bg-gray-50 rounded-lg text-codGray">{user.name}</p>
@@ -167,7 +167,7 @@ export default function Profile() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 ) : (
                   <p className="px-4 py-3 bg-gray-50 rounded-lg text-codGray">{user.email}</p>
@@ -186,7 +186,7 @@ export default function Profile() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="Enter your phone number"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 ) : (
                   <p className="px-4 py-3 bg-gray-50 rounded-lg text-codGray">{formData.phone || "Not provided"}</p>
@@ -204,7 +204,7 @@ export default function Profile() {
                     name="dateOfBirth"
                     value={formData.dateOfBirth}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 ) : (
                   <p className="px-4 py-3 bg-gray-50 rounded-lg text-codGray">
@@ -225,7 +225,7 @@ export default function Profile() {
                     onChange={handleChange}
                     placeholder="Enter your address"
                     rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
                   />
                 ) : (
                   <p className="px-4 py-3 bg-gray-50 rounded-lg text-codGray">{formData.address || "Not provided"}</p>
@@ -238,7 +238,7 @@ export default function Profile() {
         {/* Account Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-            <div className="w-12 h-12 bg-spectra rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 bg-brand-primary rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-white font-bold text-xl">0</span>
             </div>
             <h3 className="text-lg font-semibold text-codGray mb-2">Total Orders</h3>
@@ -246,7 +246,7 @@ export default function Profile() {
           </div>
 
           <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-            <div className="w-12 h-12 bg-neptune rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 bg-brand-primary-dark rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-white font-bold text-xl">0</span>
             </div>
             <h3 className="text-lg font-semibold text-codGray mb-2">Wishlist Items</h3>

@@ -30,8 +30,8 @@ export default function RelatedProducts({ products, title = "Related Products" }
 
   return (
     <>
-      <div className="bg-white rounded-lg p-6 shadow-md">
-        <h3 className="text-2xl font-bold text-codGray mb-6">{title}</h3>
+      <div className="bg-surface-primary rounded-lg p-6 shadow-md">
+        <h3 className="text-2xl font-bold text-text-primary mb-6">{title}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} onQuickView={handleQuickView} />

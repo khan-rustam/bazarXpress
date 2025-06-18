@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "../../../components/AdminLayout"
 import { getCurrentUser } from "../../../lib/auth"
-import { Search, Filter, MoreHorizontal, Edit, Eye, Package, Truck, CheckCircle, X } from "lucide-react"
+import { Search, Filter, MoreHorizontal, Edit, Eye, Package, Truck, CheckCircle, X, RefreshCw } from "lucide-react"
 import { Pencil } from "lucide-react"
 
 // Mock orders data
@@ -64,6 +64,17 @@ const mockOrders = [
     paymentMethod: "Credit Card",
     shippingAddress: "654 Maple Dr, Phoenix, AZ 85001",
   },
+  {
+    id: "ORD-006",
+    customer: "Alice Cooper",
+    email: "alice@example.com",
+    amount: 59.99,
+    status: "refunded",
+    date: "2024-03-12",
+    items: 1,
+    paymentMethod: "Credit Card",
+    shippingAddress: "987 Willow St, Miami, FL 33101",
+  },
 ]
 
 const statusConfig = {
@@ -71,9 +82,10 @@ const statusConfig = {
   shipped: { icon: Truck, color: "text-blue-600", bg: "bg-blue-100" },
   delivered: { icon: CheckCircle, color: "text-green-600", bg: "bg-green-100" },
   cancelled: { icon: X, color: "text-red-600", bg: "bg-red-100" },
+  refunded: { icon: RefreshCw, color: "text-purple-600", bg: "bg-purple-100" },
 }
 
-const statusOptions = ["Processing", "Shipped", "Delivered", "Cancelled"]
+const statusOptions = ["Processing", "Shipped", "Delivered", "Cancelled", "Refunded"]
 
 export default function AdminOrders() {
   const [user, setUser] = useState(null)
@@ -90,7 +102,7 @@ export default function AdminOrders() {
       router.push("/")
       return
     }
-    setUser(currentUser)
+    setUser(currentUser as any)
   }, [router])
 
   const filteredOrders = orders.filter((order) => {
@@ -108,6 +120,7 @@ export default function AdminOrders() {
     shipped: orders.filter((o) => o.status === "shipped").length,
     delivered: orders.filter((o) => o.status === "delivered").length,
     cancelled: orders.filter((o) => o.status === "cancelled").length,
+    refunded: orders.filter((o) => o.status === "refunded").length,
   }
 
   const openView = (order: any) => {
@@ -123,7 +136,7 @@ export default function AdminOrders() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-spectra mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>
@@ -142,7 +155,7 @@ export default function AdminOrders() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
           <div className="bg-white rounded-lg p-6 shadow-md">
             <div className="text-center">
               <p className="text-sm font-medium text-gray-600">Total Orders</p>
@@ -173,6 +186,12 @@ export default function AdminOrders() {
               <p className="text-2xl font-bold text-red-600">{orderStats.cancelled}</p>
             </div>
           </div>
+          <div className="bg-white rounded-lg p-6 shadow-md">
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-600">Refunded</p>
+              <p className="text-2xl font-bold text-purple-600">{orderStats.refunded}</p>
+            </div>
+          </div>
         </div>
 
         {/* Filters */}
@@ -185,24 +204,22 @@ export default function AdminOrders() {
                 placeholder="Search orders..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
               />
             </div>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-spectra"
+              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary"
             >
               <option value="all">All Status</option>
               <option value="processing">Processing</option>
               <option value="shipped">Shipped</option>
               <option value="delivered">Delivered</option>
               <option value="cancelled">Cancelled</option>
+              <option value="refunded">Refunded</option>
             </select>
-            <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
-              <Filter className="h-4 w-4" />
-              <span>More Filters</span>
-            </button>
+
           </div>
         </div>
 
@@ -251,16 +268,14 @@ export default function AdminOrders() {
                       <td className="py-4 px-6 text-gray-600">{order.items} items</td>
                       <td className="py-4 px-6">
                         <div className="flex items-center space-x-2">
-                          <button className="p-1 text-gray-400 hover:text-spectra transition-colors">
+                          <button className="p-1 text-gray-400 hover:text-brand-primary transition-colors">
                             <Eye className="h-4 w-4" />
                           </button>
-                          <button className="p-1 text-gray-400 hover:text-spectra transition-colors">
+                          <button className="p-1 text-gray-400 hover:text-brand-primary transition-colors">
                             <Edit className="h-4 w-4" />
                           </button>
-                          <button className="p-1 text-gray-400 hover:text-gray-600 transition-colors">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </button>
-                        </div>
+
+                      </div>
                       </td>
                     </tr>
                   )
@@ -276,14 +291,14 @@ export default function AdminOrders() {
             Showing {filteredOrders.length} of {orders.length} orders
           </p>
           <div className="flex space-x-2">
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors">
+            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-brand-primary hover:text-white transition-colors">
               Previous
             </button>
-            <button className="px-3 py-1 bg-spectra text-white rounded text-sm">1</button>
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors">
+            <button className="px-3 py-1 bg-brand-primary text-white rounded text-sm">1</button>
+            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-brand-primary hover:text-white transition-colors">
               2
             </button>
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors">
+            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-brand-primary hover:text-white transition-colors">
               Next
             </button>
           </div>
@@ -315,7 +330,7 @@ export default function AdminOrders() {
                 </select>
               </div>
               <div className="flex gap-2 mt-4">
-                <button className="bg-gradient-to-r from-spectra to-elm text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:scale-105 transition-transform" onClick={updateStatus}>Save</button>
+                <button className="bg-gradient-to-r from-brand-primary to-elm text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:scale-105 transition-transform" onClick={updateStatus}>Save</button>
                 <button className="bg-gray-200 hover:bg-gray-300 text-codGray font-semibold py-2 px-6 rounded-lg transition-colors" onClick={() => setViewing(null)}>Cancel</button>
               </div>
             </div>

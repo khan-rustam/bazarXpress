@@ -6,7 +6,7 @@ import Link from "next/link"
 import Layout from "../components/Layout"
 import ProductCard from "../components/ProductCard"
 import QuickViewModal from "../components/QuickViewModal"
-import { ChevronRight, ArrowRight } from "lucide-react"
+import { ChevronRight, ArrowRight, ChevronDown } from "lucide-react"
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel"
 import { useRouter } from "next/navigation"
 
@@ -51,6 +51,41 @@ const featuredProducts = [
     rating: 4,
   },
 ]
+
+// Mock data for Trending Products (can be different from featured products)
+const trendingProducts = [
+  { id: "5", name: "Portable Bluetooth Speaker", price: 49.99, image: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", category: "Electronics", rating: 4, isNew: true },
+  { id: "6", name: "Noise-Cancelling Headphones", price: 129.99, image: "https://images.unsplash.com/photo-1577174881658-0f30ed549adc?q=80&w=840&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", category: "Electronics", rating: 5 },
+  { id: "7", name: "Ergonomic Office Chair", price: 249.99, image: "https://images.unsplash.com/photo-1688578735427-994ecdea3ea4?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", category: "Home & Office", rating: 4, isSale: true },
+  { id: "8", name: "Smart Home Security Camera", price: 89.99, image: "https://images.unsplash.com/photo-1520697830682-bbb6e85e2b0b?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", category: "Smart Home", rating: 3 },
+];
+
+// Mock data for New Arrivals (can be different from featured products)
+const newArrivals = [
+  { id: "9", name: "Portable Mini Projector", price: 189.99, image: "https://images.unsplash.com/photo-1535016120720-40c646be5580?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", category: "Electronics", rating: 5, isNew: true },
+  { id: "10", name: "Aromatherapy Diffuser", price: 34.99, image: "https://images.unsplash.com/photo-1660853142045-a74bc7d4e07b?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", category: "Home & Wellness", rating: 4, isNew: true },
+  { id: "11", name: "Wireless Charging Pad", price: 29.99, image: "https://images.unsplash.com/photo-1586855471379-27e05b3006ae?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", category: "Electronics", rating: 4, isSale: true, isNew: true },
+  { id: "12", name: "Travel Backpack with USB Port", price: 69.99, image: "https://images.unsplash.com/photo-1592289924034-c423dd2f1c5d?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", category: "Travel", rating: 5, isNew: true },
+];
+
+// Mock data for Customer Reviews
+const customerReviews = [
+  {
+    id: 1, name: "Alice B.", rating: 5, comment: "Absolutely love my new headphones! The sound quality is amazing and they're so comfortable.", product: "Wireless Bluetooth Headphones", verified: true
+  },
+  {
+    id: 2, name: "Bob T.", rating: 4, comment: "The Smart Fitness Watch is great. Battery life is impressive, just wish it had more color options.", product: "Smart Fitness Watch", verified: true
+  },
+  {
+    id: 3, name: "Charlie K.", rating: 5, comment: "The coffee maker makes perfect coffee every time. Fast shipping too!", product: "Premium Coffee Maker", verified: false
+  },
+  {
+    id: 4, name: "Diana L.", rating: 5, comment: "Fantastic t-shirt, so soft and eco-friendly. Will definitely buy more!", product: "Organic Cotton T-Shirt", verified: true
+  },
+  {
+    id: 5, name: "Eve R.", rating: 4, comment: "Speaker sounds great for its size. Good value for money.", product: "Portable Bluetooth Speaker", verified: true
+  },
+];
 
 const categories = [
   {
@@ -107,7 +142,7 @@ const heroSlides = [
     subheadline: "Get up to 30% off on your first $150 purchase",
     description: "We have prepared special discounts for you on grocery products. Don't miss these opportunities...",
     button: { text: "Shop Now", href: "/shop" },
-    buttonColor: "bg-lime-500 hover:bg-lime-600 text-white",
+    buttonColor: "bg-brand-success hover:bg-brand-success-dark text-text-inverse",
     highlight: "Get up to 30% off on your first $150 purchase",
   },
   {
@@ -116,7 +151,7 @@ const heroSlides = [
     subheadline: "Farm to Table Freshness",
     description: "Order now and enjoy the best quality produce delivered to your door.",
     button: { text: "Browse Produce", href: "/shop" },
-    buttonColor: "bg-elm hover:bg-spectra text-white",
+    buttonColor: "bg-brand-primary hover:bg-brand-primary-dark text-text-inverse",
     highlight: "Farm to Table Freshness",
   },
   {
@@ -125,7 +160,7 @@ const heroSlides = [
     subheadline: "Save More Every Week",
     description: "Stock up on your weekly essentials and save big with our exclusive offers.",
     button: { text: "See Offers", href: "/shop" },
-    buttonColor: "bg-spectra hover:bg-elm text-white",
+    buttonColor: "bg-brand-secondary hover:bg-brand-secondary-dark text-text-inverse",
     highlight: "Save More Every Week",
   },
 ]
@@ -171,7 +206,7 @@ export default function Home() {
   const NoticeBar = notice && showNotice && notice.message ? (
     <div
       className="w-full text-center py-3 px-4 flex items-center justify-center relative z-50"
-      style={{ background: notice.bgColor || '#A16A8A', color: notice.textColor || '#fff' }}
+      style={{ background: notice.bgColor || 'bg-brand-notice-bg', color: notice.textColor || 'text-brand-notice-text' }}
     >
       <div className="flex flex-col md:flex-row md:items-center w-full justify-center gap-2 md:gap-4">
         <div className="text-left w-full">
@@ -179,7 +214,7 @@ export default function Home() {
         </div>
       </div>
       <button
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-lg"
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-text-inverse/80 hover:text-text-inverse text-lg"
         onClick={() => setShowNotice(false)}
         aria-label="Dismiss notice"
       >
@@ -193,12 +228,12 @@ export default function Home() {
       {NoticeBar}
       <Layout>
         {/* Hero Section */}
-        <section className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
+        <section className="relative min-h-screen w-full overflow-hidden -mt-28">
           <Carousel opts={{ loop: true }} autoplay interval={4000}>
             <CarouselContent>
               {heroSlides.map((slide, idx) => (
                 <CarouselItem key={idx}>
-                  <div className="relative h-[500px] md:h-[600px] w-full flex items-center justify-start">
+                  <div className="relative min-h-screen w-full flex items-center justify-start">
                     <Image
                       src={slide.image}
                       alt={slide.headline}
@@ -207,15 +242,15 @@ export default function Home() {
                       priority={idx === 0}
                     />
                     <div className="absolute inset-0 bg-black/50" />
-                    <div className="relative z-10 max-w-2xl ml-8 md:ml-20 text-left text-white animate-fade-in">
+                    <div className="relative z-10 max-w-2xl ml-8 md:ml-20 text-left text-text-inverse animate-fade-in">
                       {slide.highlight && (
-                        <div className="mb-4 text-lime-300 font-semibold text-lg md:text-xl">{slide.highlight}</div>
+                        <div className="mb-4 text-brand-success font-semibold text-lg md:text-xl">{slide.highlight}</div>
                       )}
                       <h1 className="text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg">{slide.headline}</h1>
-                      <p className="text-lg md:text-xl mb-6 text-gray-200 max-w-lg">{slide.description}</p>
+                      <p className="text-lg md:text-xl mb-6 text-text-inverse/80 max-w-lg">{slide.description}</p>
                       <Link
                         href={slide.button.href}
-                        className={`${slide.buttonColor} font-semibold py-3 px-8 rounded-full transition-all duration-300 shadow-lg inline-flex items-center space-x-2 text-lg`}
+                        className={`inline-flex items-center ${slide.buttonColor} font-semibold py-3 px-6 rounded-lg transition-all duration-200 space-x-2`}
                       >
                         <span>{slide.button.text}</span>
                         <ArrowRight className="h-5 w-5" />
@@ -225,47 +260,48 @@ export default function Home() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
           </Carousel>
+
+          {/* Scroll Down Button */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30">
+            <button
+              onClick={() => document.getElementById('categories-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="p-3 bg-brand-primary hover:bg-brand-primary-dark text-white rounded-full transition-colors duration-300 animate-bounce shadow-lg"
+              aria-label="Scroll down"
+            >
+              <ChevronDown className="h-6 w-6" />
+            </button>
+          </div>
         </section>
 
-        {/* Categories Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-codGray mb-4">Shop by Category</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Explore our wide range of categories and find exactly what you're looking for.
-              </p>
-            </div>
+        {/* Category Section */}
+        <section id="categories-section" className="py-16 bg-surface-secondary">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+            <h2 className="text-3xl font-bold text-text-primary text-center mb-4">Shop by Category</h2>
+            <p className="text-text-secondary text-center max-w-xl mx-auto">
+              Explore our diverse range of products across various categories.
+            </p>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {categories.map((category) => (
-                <div
-                  key={category.name}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => router.push(`/shop?category=${encodeURIComponent(category.name)}`)}
-                  onKeyDown={e => { if (e.key === 'Enter') router.push(`/shop?category=${encodeURIComponent(category.name)}`) }}
-                  className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer focus:ring-2 focus:ring-spectra outline-none"
-                >
-                  <div className="relative aspect-square">
-                    <Image
-                      src={category.image || "/placeholder.svg"}
-                      alt={category.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-semibold text-codGray group-hover:text-spectra transition-colors">
-                      {category.name}
-                    </h3>
-                  </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8">
+            {categories.map((category, index) => (
+              <Link
+                href={category.href}
+                key={index}
+                className="relative group overflow-hidden rounded-lg shadow-lg aspect-[4/3]"
+              >
+                <Image
+                  src={category.image}
+                  alt={category.name}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-300" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <h3 className="text-white text-xl font-bold z-10 drop-shadow-md">{category.name}</h3>
                 </div>
-              ))}
-            </div>
+              </Link>
+            ))}
           </div>
         </section>
 
@@ -274,10 +310,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-12">
               <div>
-                <h2 className="text-3xl font-bold text-codGray mb-4">Featured Products</h2>
-                <p className="text-gray-600">Discover our handpicked selection of top-quality products.</p>
+                <h2 className="text-3xl font-bold text-text-primary mb-4">Featured Products</h2>
+                <p className="text-text-secondary">Discover our handpicked selection of top-quality products.</p>
               </div>
-              <Link href="/shop" className="flex items-center text-spectra hover:text-elm font-semibold space-x-1">
+              <Link href="/shop" className="flex items-center text-brand-primary hover:text-brand-primary-dark font-semibold space-x-1">
                 <span>View All</span>
                 <ChevronRight className="h-5 w-5" />
               </Link>
@@ -291,16 +327,99 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Promotional Banner */}
-        <section className="py-16 bg-gradient-to-r from-mountbattenPink via-gulfStream to-neptune">
+        {/* Trending Products */}
+        <section className="py-16 bg-surface-secondary">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-12">
+              <div>
+                <h2 className="text-3xl font-bold text-text-primary mb-4">Trending Products</h2>
+                <p className="text-text-secondary">Check out what's popular right now.</p>
+              </div>
+              <Link href="/shop?sort=trending" className="flex items-center text-brand-primary hover:text-brand-primary-dark font-semibold space-x-1">
+                <span>View All</span>
+                <ChevronRight className="h-5 w-5" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {trendingProducts.map((product) => (
+                <ProductCard key={product.id} product={product} onQuickView={handleQuickView} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* New Arrivals */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-12">
+              <div>
+                <h2 className="text-3xl font-bold text-text-primary mb-4">New Arrivals</h2>
+                <p className="text-text-secondary">Be the first to discover our latest additions.</p>
+              </div>
+              <Link href="/shop?sort=new-arrivals" className="flex items-center text-brand-primary hover:text-brand-primary-dark font-semibold space-x-1">
+                <span>View All</span>
+                <ChevronRight className="h-5 w-5" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {newArrivals.map((product) => (
+                <ProductCard key={product.id} product={product} onQuickView={handleQuickView} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Customer Reviews Carousel */}
+        <section className="py-16 bg-surface-secondary">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Summer Sale - Up to 50% Off!</h2>
-            <p className="text-xl text-white mb-8 opacity-90">
+            <h2 className="text-3xl font-bold text-text-primary mb-12">What Our Customers Say</h2>
+            <Carousel opts={{ align: "start", loop: true }} className="w-full">
+              <CarouselContent className="-ml-4">
+                {customerReviews.filter(review => review.verified).map((review) => (
+                  <CarouselItem key={review.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                    <div className="p-6 bg-surface-primary rounded-lg shadow-md flex flex-col items-center text-center h-full">
+                      <div className="flex items-center mb-4">
+                        {[...Array(5)].map((_, i) => (
+                          <svg
+                            key={i}
+                            className={`h-5 w-5 ${i < review.rating ? 'text-brand-warning' : 'text-text-tertiary'}`}
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                      <p className="text-text-primary italic mb-4 flex-grow">"{review.comment}"</p>
+                      <p className="font-semibold text-text-primary">- {review.name}</p>
+                      {review.product && <p className="text-sm text-text-secondary">Product: {review.product}</p>}
+                      {review.verified && (
+                        <span className="mt-2 text-xs font-medium text-brand-success bg-brand-success/10 px-2 py-1 rounded-full">
+                          Verified Purchase
+                        </span>
+                      )}
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+        </section>
+
+        {/* Promotional Banner */}
+        <section className="py-16 bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-text-inverse mb-4">Summer Sale - Up to 50% Off!</h2>
+            <p className="text-xl text-text-inverse/90 mb-8">
               Don't miss out on our biggest sale of the year. Limited time offer!
             </p>
             <Link
               href="/shop"
-              className="bg-white text-spectra font-semibold py-4 px-8 rounded-lg hover:bg-gray-100 transition-colors space-x-2 inline-flex items-center"
+              className="bg-surface-primary text-brand-primary font-semibold py-4 px-8 rounded-lg hover:bg-surface-secondary transition-colors space-x-2 inline-flex items-center"
             >
               <span>Shop Sale Items</span>
               <ArrowRight className="h-5 w-5" />
@@ -309,11 +428,11 @@ export default function Home() {
         </section>
 
         {/* Blog Highlights */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-surface-secondary">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-codGray mb-4">Latest from Our Blog</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
+              <h2 className="text-3xl font-bold text-text-primary mb-4">Latest from Our Blog</h2>
+              <p className="text-text-secondary max-w-2xl mx-auto">
                 Stay updated with the latest trends, tips, and insights from our experts.
               </p>
             </div>
@@ -323,7 +442,7 @@ export default function Home() {
                 <Link
                   key={post.id}
                   href={`/blog/${post.id}`}
-                  className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  className="group bg-surface-primary rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
                 >
                   <div className="relative aspect-video">
                     <Image
@@ -334,34 +453,14 @@ export default function Home() {
                     />
                   </div>
                   <div className="p-6">
-                    <p className="text-sm text-gray-500 mb-2">{post.date}</p>
-                    <h3 className="font-semibold text-codGray group-hover:text-spectra transition-colors mb-3 line-clamp-2">
+                    <p className="text-sm text-text-tertiary mb-2">{post.date}</p>
+                    <h3 className="font-semibold text-text-primary group-hover:text-brand-primary transition-colors mb-3 line-clamp-2">
                       {post.title}
                     </h3>
-                    <p className="text-gray-600 text-sm line-clamp-3">{post.excerpt}</p>
+                    <p className="text-text-secondary text-sm line-clamp-3">{post.excerpt}</p>
                   </div>
                 </Link>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Newsletter CTA */}
-        <section className="py-16 bg-gradient-to-br from-martinique via-codGray to-mobster">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">Stay Connected with BazarXpress</h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Get exclusive deals, new arrivals, and special offers delivered to your inbox.
-            </p>
-            <div className="flex flex-col sm:flex-row max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                className="flex-1 px-4 py-3 rounded-l-lg sm:rounded-r-none rounded-r-lg focus:outline-none focus:ring-2 focus:ring-spectra"
-              />
-              <button className="bg-spectra hover:bg-elm text-white font-semibold py-3 px-6 rounded-r-lg sm:rounded-l-none rounded-l-lg mt-2 sm:mt-0 transition-colors">
-                Subscribe
-              </button>
             </div>
           </div>
         </section>

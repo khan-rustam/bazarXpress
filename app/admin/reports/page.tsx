@@ -56,10 +56,10 @@ export default function AdminReports() {
             <p className="text-gray-600">Track your business performance</p>
           </div>
           <div className="flex space-x-2">
-            <button className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="bg-surface-tertiary hover:bg-surface-tertiary-dark border border-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors">
               Export PDF
             </button>
-            <button className="bg-spectra hover:bg-elm text-white px-4 py-2 rounded-lg transition-colors">
+            <button className="bg-brand-primary hover:bg-brand-primary-dark text-white px-4 py-2 rounded-lg transition-colors">
               Generate Report
             </button>
           </div>
@@ -155,7 +155,7 @@ export default function AdminReports() {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-spectra h-2 rounded-full transition-all duration-300"
+                        className="bg-brand-primary h-2 rounded-full transition-all duration-300"
                         style={{ width: `${category.percentage}%` }}
                       />
                     </div>

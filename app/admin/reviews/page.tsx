@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "../../../components/AdminLayout"
-import { getCurrentUser } from "../../../lib/auth"
+import { getCurrentUser, type User } from "../../../lib/auth"
 import { Search, Filter, Star, CheckCircle, X, Eye, MoreHorizontal } from "lucide-react"
 
 // Mock reviews data
@@ -49,7 +49,7 @@ const mockReviews = [
 ]
 
 export default function AdminReviews() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<User | null>(null)
   const [reviews, setReviews] = useState(mockReviews)
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
@@ -153,19 +153,19 @@ export default function AdminReviews() {
         <div className="bg-white rounded-lg p-6 shadow-md">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-primary" />
               <input
                 type="text"
                 placeholder="Search reviews..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
               />
             </div>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-spectra"
+              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary"
             >
               <option value="all">All Status</option>
               <option value="approved">Approved</option>
@@ -175,7 +175,7 @@ export default function AdminReviews() {
             <select
               value={filterRating}
               onChange={(e) => setFilterRating(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-spectra"
+              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary"
             >
               <option value="all">All Ratings</option>
               <option value="5">5 Stars</option>
@@ -184,10 +184,6 @@ export default function AdminReviews() {
               <option value="2">2 Stars</option>
               <option value="1">1 Star</option>
             </select>
-            <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
-              <Filter className="h-4 w-4" />
-              <span>More Filters</span>
-            </button>
           </div>
         </div>
 
@@ -231,7 +227,7 @@ export default function AdminReviews() {
                   <p className="text-gray-700">{review.comment}</p>
                 </div>
                 <div className="flex items-center space-x-2 ml-4">
-                  <button className="p-2 text-gray-400 hover:text-spectra transition-colors">
+                  <button className="p-2 text-gray-400 hover:text-brand-primary transition-colors">
                     <Eye className="h-4 w-4" />
                   </button>
                   <button className="p-2 text-gray-400 hover:text-green-500 transition-colors">
@@ -239,9 +235,6 @@ export default function AdminReviews() {
                   </button>
                   <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
                     <X className="h-4 w-4" />
-                  </button>
-                  <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <MoreHorizontal className="h-4 w-4" />
                   </button>
                 </div>
               </div>
@@ -258,7 +251,7 @@ export default function AdminReviews() {
             <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors">
               Previous
             </button>
-            <button className="px-3 py-1 bg-spectra text-white rounded text-sm">1</button>
+            <button className="px-3 py-1 bg-brand-primary text-white rounded text-sm">1</button>
             <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors">
               2
             </button>

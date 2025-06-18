@@ -3,10 +3,20 @@
 @tailwind utilities;
 html {
     scroll-behavior: smooth;
+    scrollbar-width: none;
+    scrollbar-color: transparent transparent;
+    overflow-x: hidden;
 }
 
 body {
+    @apply bg-surface-primary text-text-primary;
     font-family: "Inter", Arial, Helvetica, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+}
+
+.dark body {
+    @apply bg-text-primary text-surface-secondary;
 }
 
 @layer base {
@@ -18,9 +28,9 @@ body {
         --card-foreground: 222 84% 5%;
         --popover: 0 0% 100%;
         --popover-foreground: 222 84% 5%;
-        --primary: 28 100% 45%;
+        --primary: 45 100% 50%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 210 40% 95%;
+        --secondary: 97 98% 51%;
         --secondary-foreground: 222 84% 5%;
         --muted: 210 40% 95%;
         --muted-foreground: 215 16% 47%;
@@ -30,12 +40,7 @@ body {
         --destructive-foreground: 0 0% 100%;
         --border: 214 32% 91%;
         --input: 214 32% 91%;
-        --ring: 28 100% 45%;
-        --chart-1: 28 100% 45%;
-        --chart-2: 195 85% 35%;
-        --chart-3: 280 65% 60%;
-        --chart-4: 142 76% 36%;
-        --chart-5: 45 93% 47%;
+        --ring: 45 100% 50%;
         --radius: 0.75rem;
         /* Sidebar Variables */
         --sidebar-background: 0 0% 98%;
@@ -55,9 +60,9 @@ body {
         --card-foreground: 210 40% 98%;
         --popover: 222 84% 5%;
         --popover-foreground: 210 40% 98%;
-        --primary: 28 100% 55%;
+        --primary: 45 100% 55%;
         --primary-foreground: 222 84% 5%;
-        --secondary: 217 33% 17%;
+        --secondary: 97 98% 55%;
         --secondary-foreground: 210 40% 98%;
         --muted: 217 33% 17%;
         --muted-foreground: 215 20% 65%;
@@ -67,7 +72,7 @@ body {
         --destructive-foreground: 210 40% 98%;
         --border: 217 33% 23%;
         --input: 217 33% 23%;
-        --ring: 28 100% 55%;
+        --ring: 45 100% 55%;
         --chart-1: 28 100% 55%;
         --chart-2: 195 85% 45%;
         --chart-3: 280 65% 70%;
@@ -90,11 +95,11 @@ body {
         @apply border-border;
     }
     body {
-        @apply bg-white text-gray-900;
+        @apply bg-surface-primary text-text-primary;
         font-feature-settings: "rlig" 1, "calt" 1;
     }
     .dark body {
-        @apply bg-gray-900 text-gray-100;
+        @apply bg-text-primary text-surface-secondary;
     }
 }
 
@@ -116,75 +121,75 @@ body {
     }
     /* Brand Gradient Utilities */
     .bg-gradient-brand {
-        background: linear-gradient( 135deg, hsl(28, 100%, 45%) 0%, hsl(195, 85%, 35%) 100%);
+        @apply bg-gradient-to-br from-brand-primary to-brand-secondary;
     }
     .bg-gradient-brand-vertical {
-        background: linear-gradient( 180deg, hsl(28, 100%, 45%) 0%, hsl(195, 85%, 35%) 100%);
+        @apply bg-gradient-to-b from-brand-primary to-brand-secondary;
     }
     .bg-gradient-accent {
-        background: linear-gradient( 135deg, hsl(280, 65%, 60%) 0%, hsl(28, 100%, 45%) 100%);
+        @apply bg-gradient-to-br from-brand-accent to-brand-primary;
     }
     /* Shadow Utilities */
     .shadow-brand {
-        box-shadow: 0 4px 14px 0 hsla(28, 100%, 45%, 0.15);
+        @apply shadow-[0_4px_14px_0] shadow-brand-primary/15;
     }
     .shadow-brand-lg {
-        box-shadow: 0 10px 25px -3px hsla(28, 100%, 45%, 0.2), 0 4px 6px -2px hsla(28, 100%, 45%, 0.1);
+        @apply shadow-[0_10px_25px_-3px] shadow-brand-primary/20 shadow-[0_4px_6px_-2px] shadow-brand-primary/10;
     }
     /* Hover Effects */
     .hover-lift {
-        @apply transition-transform duration-200 hover: scale-105;
+        @apply transition-transform duration-200 hover:scale-105;
     }
     .hover-glow {
-        @apply transition-shadow duration-200 hover: shadow-brand;
+        @apply transition-shadow duration-200 hover:shadow-brand;
     }
 }
 
 @layer components {
     /* Button Variants */
     .btn-brand {
-        @apply bg-brand-primary text-white hover: bg-orange-600 focus: ring-orange-500/50 transition-all duration-200 font-medium px-6 py-3 rounded-lg shadow-brand hover: shadow-brand-lg;
+        @apply bg-brand-primary text-text-inverse hover:bg-brand-primary/90 focus:ring-brand-primary/50 transition-all duration-200 font-medium px-6 py-3 rounded-lg shadow-brand hover:shadow-brand-lg;
     }
     .btn-brand-outline {
-        @apply border-2 border-brand-primary text-brand-primary hover: bg-brand-primary hover: text-white focus: ring-orange-500/50 transition-all duration-200 font-medium px-6 py-3 rounded-lg;
+        @apply border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-text-inverse focus:ring-brand-primary/50 transition-all duration-200 font-medium px-6 py-3 rounded-lg;
     }
     .btn-secondary {
-        @apply bg-brand-secondary text-white hover: bg-teal-700 focus: ring-teal-500/50 transition-all duration-200 font-medium px-6 py-3 rounded-lg;
+        @apply bg-brand-secondary text-text-inverse hover:bg-brand-secondary/90 focus:ring-brand-secondary/50 transition-all duration-200 font-medium px-6 py-3 rounded-lg;
     }
     /* Card Variants */
     .card-brand {
-        @apply bg-white border border-gray-200 rounded-xl shadow-sm hover: shadow-brand transition-all duration-200 p-6;
+        @apply bg-surface-primary border border-border-primary rounded-xl shadow-sm hover:shadow-brand transition-all duration-200 p-6;
     }
     .card-accent {
-        @apply bg-gradient-to-br from-orange-50 to-teal-50 border border-orange-200 rounded-xl p-6;
+        @apply bg-gradient-to-br from-brand-primary to-brand-secondary border border-brand-primary rounded-xl p-6;
     }
     /* Input Variants */
     .input-brand {
-        @apply border-gray-300 focus: border-brand-primary focus: ring-orange-500/20 bg-white text-gray-900 placeholder: text-gray-500 rounded-lg px-4 py-3 transition-all duration-200;
+        @apply border-border-secondary focus:border-brand-primary focus:ring-brand-primary/20 bg-surface-primary text-text-primary placeholder:text-text-secondary rounded-lg px-4 py-3 transition-all duration-200;
     }
     /* Badge Variants */
     .badge-success {
-        @apply bg-green-100 text-green-800 border border-green-200 px-3 py-1 rounded-full text-sm font-medium;
+        @apply bg-surface-tertiary text-brand-success border border-border-primary px-3 py-1 rounded-full text-sm font-medium;
     }
     .badge-warning {
-        @apply bg-yellow-100 text-yellow-800 border border-yellow-200 px-3 py-1 rounded-full text-sm font-medium;
+        @apply bg-surface-tertiary text-brand-warning border border-border-primary px-3 py-1 rounded-full text-sm font-medium;
     }
     .badge-error {
-        @apply bg-red-100 text-red-800 border border-red-200 px-3 py-1 rounded-full text-sm font-medium;
+        @apply bg-surface-tertiary text-brand-error border border-border-primary px-3 py-1 rounded-full text-sm font-medium;
     }
     .badge-info {
-        @apply bg-blue-100 text-blue-800 border border-blue-200 px-3 py-1 rounded-full text-sm font-medium;
+        @apply bg-surface-tertiary text-brand-info border border-border-primary px-3 py-1 rounded-full text-sm font-medium;
     }
     /* Navigation Styles */
     .nav-link {
-        @apply text-gray-600 hover: text-brand-primary transition-colors duration-200 font-medium;
+        @apply text-text-secondary hover:text-brand-primary transition-colors duration-200 font-medium;
     }
     .nav-link-active {
         @apply text-brand-primary font-semibold;
     }
     /* Section Styles */
     .section-padding {
-        @apply py-16 px-4 sm: px-6 lg: px-8;
+        @apply py-16 px-4 sm:px-6 lg:px-8;
     }
     .container-brand {
         @apply max-w-7xl mx-auto;
@@ -195,35 +200,36 @@ body {
 /* Custom Scrollbar */
 
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 0px;
+    height: 0px;
 }
 
 ::-webkit-scrollbar-track {
-    @apply bg-gray-100;
+    @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: hsla(28, 100%, 45%, 0.3);
-    border-radius: 4px;
+    @apply bg-transparent;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: hsla(28, 100%, 45%, 0.5);
+/* For Firefox */
+html {
+    scrollbar-width: none;
+    scrollbar-color: transparent transparent;
 }
 
 
 /* Selection Styles */
 
 ::selection {
-    background: hsla(28, 100%, 45%, 0.2);
-    color: hsl(222, 84%, 5%);
+    @apply bg-brand-primary/20 text-text-primary;
 }
 
 
 /* Focus Styles */
 
 .focus-brand {
-    @apply outline-none ring-2 ring-orange-500/50 ring-offset-2;
+    @apply outline-none ring-2 ring-brand-primary/50 ring-offset-2;
 }
 
 

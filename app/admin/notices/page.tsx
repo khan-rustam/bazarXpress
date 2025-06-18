@@ -18,8 +18,8 @@ const defaultNotice: Notice = {
   message: "",
   startDate: "",
   endDate: "",
-  bgColor: "#A16A8A", // mountbattenPink
-  textColor: "#fff"
+  bgColor: "bg-brand-notice-bg",
+  textColor: "text-brand-notice-text"
 }
 
 export default function AdminNotices() {
@@ -93,7 +93,7 @@ export default function AdminNotices() {
           <div className="flex items-center justify-between mb-4">
             <div className="font-semibold text-lg">Notice</div>
             <button
-              className="bg-gray-100 hover:bg-spectra hover:text-white text-codGray rounded p-2 transition-colors"
+              className="bg-surface-primary hover:bg-brand-primary hover:text-text-inverse text-text-primary rounded p-2 transition-colors"
               onClick={() => { setEditing({ ...defaultNotice }); setShowForm(true) }}
               aria-label="Add Notice"
             >
@@ -112,24 +112,38 @@ export default function AdminNotices() {
             <tbody>
               {notices.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="text-center text-gray-400 py-8">No notices yet.</td>
+                  <td colSpan={4}>
+                    <div className="flex flex-col items-center justify-center py-16">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-brand-primary mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                      </svg>
+                      <div className="text-lg text-gray-500 mb-2">No notices yet.</div>
+                      <div className="text-sm text-gray-400 mb-6">Click the + button or the button below to add your first notice.</div>
+                      <button
+                        className="bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                        onClick={() => { setEditing({ ...defaultNotice }); setShowForm(true) }}
+                      >
+                        Add Notice
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               )}
               {notices.map(notice => (
                 <tr key={notice.id} className="bg-white border-b">
-                  <td className="py-3 px-4 align-top max-w-xl whitespace-pre-line">{notice.message}</td>
-                  <td className="py-3 px-4 align-top">{formatDate(notice.startDate)}</td>
-                  <td className="py-3 px-4 align-top">{formatDate(notice.endDate)}</td>
-                  <td className="py-3 px-4 align-top text-center">
+                  <td className="py-3 px-4 align-middle max-w-xl whitespace-pre-line">{notice.message}</td>
+                  <td className="py-3 px-4 align-middle">{formatDate(notice.startDate)}</td>
+                  <td className="py-3 px-4 align-middle">{formatDate(notice.endDate)}</td>
+                  <td className="py-3 px-4 align-middle text-center">
                     <button
-                      className="inline-flex items-center justify-center bg-elm hover:bg-spectra text-white rounded p-2 mr-2"
+                      className="inline-flex items-center justify-center rounded-full p-2 text-brand-primary hover:bg-brand-primary hover:text-white transition-colors mr-2"
                       onClick={() => handleEdit(notice)}
                       aria-label="Edit"
                     >
                       <Pencil className="h-5 w-5" />
                     </button>
                     <button
-                      className="inline-flex items-center justify-center bg-mountbattenPink hover:bg-red-500 text-white rounded p-2"
+                      className="inline-flex items-center justify-center rounded-full p-2 text-brand-error hover:bg-brand-error hover:text-white transition-colors"
                       onClick={() => handleDelete(notice.id)}
                       aria-label="Delete"
                     >
@@ -152,7 +166,7 @@ export default function AdminNotices() {
                   <label className="block font-medium mb-1">Your message here...</label>
                   {/* Replace with Froala or other rich text editor if needed */}
                   <textarea
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-spectra min-h-[120px]"
+                    className="w-full border border-border-primary rounded-lg p-3 focus:ring-2 focus:ring-brand-primary min-h-[120px]"
                     name="message"
                     placeholder="Type something"
                     value={editing.message}
@@ -166,7 +180,7 @@ export default function AdminNotices() {
                     <input
                       type="date"
                       name="startDate"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-spectra"
+                      className="w-full border border-border-primary rounded-lg p-3 focus:ring-2 focus:ring-brand-primary"
                       value={editing.startDate}
                       onChange={handleFormChange}
                       required
@@ -177,7 +191,7 @@ export default function AdminNotices() {
                     <input
                       type="date"
                       name="endDate"
-                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-spectra"
+                      className="w-full border border-border-primary rounded-lg p-3 focus:ring-2 focus:ring-brand-primary"
                       value={editing.endDate}
                       onChange={handleFormChange}
                       required
@@ -191,7 +205,7 @@ export default function AdminNotices() {
                       type="color"
                       name="bgColor"
                       className="w-12 h-12 p-0 border-0 bg-transparent cursor-pointer"
-                      value={editing.bgColor || "#A16A8A"}
+                      value={editing.bgColor || "bg-brand-notice-bg"}
                       onChange={handleFormChange}
                     />
                   </div>
@@ -201,7 +215,7 @@ export default function AdminNotices() {
                       type="color"
                       name="textColor"
                       className="w-12 h-12 p-0 border-0 bg-transparent cursor-pointer"
-                      value={editing.textColor || "#fff"}
+                      value={editing.textColor || "text-brand-notice-text"}
                       onChange={handleFormChange}
                     />
                   </div>
@@ -209,13 +223,13 @@ export default function AdminNotices() {
                 <div className="flex gap-2 mt-4">
                   <button
                     type="submit"
-                    className="bg-spectra hover:bg-elm text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                    className="bg-brand-primary hover:bg-brand-primary-dark text-text-inverse font-semibold py-2 px-6 rounded-lg transition-colors"
                   >
                     Save
                   </button>
                   <button
                     type="button"
-                    className="bg-gray-200 hover:bg-gray-300 text-codGray font-semibold py-2 px-6 rounded-lg transition-colors"
+                    className="bg-surface-tertiary hover:bg-surface-tertiary-dark text-text-primary font-semibold py-2 px-6 rounded-lg transition-colors"
                     onClick={() => { setEditing(null); setShowForm(false) }}
                   >
                     Cancel
@@ -223,7 +237,7 @@ export default function AdminNotices() {
                 </div>
               </form>
               <button
-                className="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl"
+                className="absolute top-3 right-3 text-text-secondary hover:text-brand-error text-2xl"
                 onClick={() => { setEditing(null); setShowForm(false) }}
                 aria-label="Close"
               >
@@ -232,7 +246,6 @@ export default function AdminNotices() {
             </div>
           </div>
         )}
-        {success && <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50">{success}</div>}
       </div>
     </AdminLayout>
   )

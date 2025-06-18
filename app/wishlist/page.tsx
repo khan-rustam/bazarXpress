@@ -50,32 +50,32 @@ export default function Wishlist() {
   return (
     <Layout>
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-4">
+      <div className="bg-surface-secondary py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="text-sm flex items-center space-x-2">
-            <Link href="/" className="text-gray-500 hover:text-spectra transition-colors">Home</Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-codGray font-medium">Wishlist</span>
+            <Link href="/" className="text-text-secondary hover:text-brand-primary transition-colors">Home</Link>
+            <span className="text-text-tertiary">/</span>
+            <span className="text-text-primary font-medium">Wishlist</span>
           </nav>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-codGray">My Wishlist</h1>
-          <span className="text-gray-600">{wishlistItems.length} items</span>
+          <h1 className="text-3xl font-bold text-text-primary">My Wishlist</h1>
+          <span className="text-text-secondary">{wishlistItems.length} items</span>
         </div>
 
         {wishlistItems.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Heart className="h-12 w-12 text-gray-400" />
+            <div className="w-24 h-24 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+              <Heart className="h-12 w-12 text-text-tertiary" />
             </div>
-            <h2 className="text-2xl font-semibold text-codGray mb-4">Your wishlist is empty</h2>
-            <p className="text-gray-600 mb-8">Save items you love to your wishlist and shop them later.</p>
+            <h2 className="text-2xl font-semibold text-text-primary mb-4">Your wishlist is empty</h2>
+            <p className="text-text-secondary mb-8">Save items you love to your wishlist and shop them later.</p>
             <Link
               href="/shop"
-              className="inline-flex items-center bg-gradient-to-r from-spectra to-elm hover:from-elm hover:to-spectra text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 space-x-2"
+              className="inline-flex items-center bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 space-x-2"
             >
               <span>Start Shopping</span>
               <ArrowRight className="h-5 w-5" />
@@ -104,9 +104,9 @@ export default function Wishlist() {
                 </div>
 
                 <div className="p-4">
-                  <p className="text-sm text-gray-500 mb-1">{item.category}</p>
+                  <p className="text-sm text-text-secondary mb-1">{item.category}</p>
                   <Link href={`/product/${item.id}`}>
-                    <h3 className="font-semibold text-codGray hover:text-spectra transition-colors line-clamp-2 mb-2">
+                    <h3 className="font-semibold text-text-primary hover:text-brand-primary transition-colors line-clamp-2 mb-2">
                       {item.name}
                     </h3>
                   </Link>
@@ -118,22 +118,22 @@ export default function Wishlist() {
                         ★
                       </span>
                     ))}
-                    <span className="text-sm text-gray-500 ml-1">({item.rating})</span>
+                    <span className="text-sm text-text-secondary ml-1">({item.rating})</span>
                   </div>
 
                   {/* Price */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-2">
-                      <span className="text-lg font-bold text-spectra">${item.price}</span>
+                      <span className="text-lg font-bold text-brand-primary">${item.price}</span>
                       {item.originalPrice && (
-                        <span className="text-sm text-gray-500 line-through">${item.originalPrice}</span>
+                        <span className="text-sm text-text-secondary line-through">${item.originalPrice}</span>
                       )}
                     </div>
                   </div>
 
                   <button
                     onClick={() => handleAddToCart(item)}
-                    className="w-full bg-gradient-to-r from-spectra to-elm hover:from-elm hover:to-spectra text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                    className="w-full bg-brand-primary hover:bg-brand-primary-dark text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2"
                   >
                     <ShoppingCart className="h-4 w-4" />
                     <span>Add to Cart</span>
