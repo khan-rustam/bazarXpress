@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react"
 import AdminLayout from "../../../components/AdminLayout"
 import { Pencil, Trash2, Plus } from "lucide-react"
+import { useAppSelector } from '../../../lib/store';
+import { useRouter } from 'next/navigation';
 
 interface Notice {
   id?: number
@@ -23,10 +25,18 @@ const defaultNotice: Notice = {
 }
 
 export default function AdminNotices() {
+  const user = useAppSelector((state) => state.auth.user);
+  const router = useRouter();
   const [notices, setNotices] = useState<Notice[]>([])
   const [editing, setEditing] = useState<Notice | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [success, setSuccess] = useState("")
+
+  useEffect(() => {
+    if (!user || user.role !== "admin") {
+      router.push("/");
+    }
+  }, [user, router]);
 
   useEffect(() => {
     const saved = localStorage.getItem("siteNotices")
@@ -84,6 +94,17 @@ export default function AdminNotices() {
     if (!iso) return ""
     const d = new Date(iso)
     return d.toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' })
+  }
+
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-spectra mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

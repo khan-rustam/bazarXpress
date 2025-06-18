@@ -2,12 +2,15 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Layout from "../../../components/Layout"
 import { authenticateUser, setCurrentUser } from "../../../lib/auth"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
+import { useAppDispatch, useAppSelector } from '../../../lib/store';
+import { login, clearError } from '../../../lib/slices/authSlice';
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -15,36 +18,32 @@ export default function Login() {
     password: "",
   })
   const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useAppDispatch();
+  const { user, error, loading } = useAppSelector((state) => state.auth);
   const router = useRouter()
+
+  useEffect(() => {
+    if (error) toast.error(error);
+    return () => { dispatch(clearError()); };
+  }, [error, dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      toast.success('Login successful!');
+      router.push('/');
+    }
+  }, [user, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     })
-    setError("")
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    setError("")
-
-    try {
-      const user = authenticateUser(formData.email, formData.password)
-      if (user) {
-        setCurrentUser(user)
-        router.push("/")
-      } else {
-        setError("Invalid email or password")
-      }
-    } catch (err) {
-      setError("An error occurred. Please try again.")
-    } finally {
-      setIsLoading(false)
-    }
+    dispatch(login(formData))
   }
 
   return (
@@ -129,10 +128,10 @@ export default function Login() {
 
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={loading}
                 className="w-full bg-gradient-to-r from-spectra to-elm hover:from-elm hover:to-spectra text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? "Signing in..." : "Sign In"}
+                {loading ? "Signing in..." : "Sign In"}
               </button>
 
               <div className="text-center">
@@ -144,11 +143,7 @@ export default function Login() {
                 </p>
               </div>
 
-              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600 mb-2">Demo Credentials:</p>
-                <p className="text-xs text-gray-500">Email: admin@gmail.com</p>
-                <p className="text-xs text-gray-500">Password: admin@123</p>
-              </div>
+            
             </form>
           </div>
         </div>

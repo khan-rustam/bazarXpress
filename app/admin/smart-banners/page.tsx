@@ -1,8 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import AdminLayout from "../../../components/AdminLayout"
 import { Plus, Eye, Trash2, UploadCloud, Pencil } from "lucide-react"
+import { useAppSelector } from '../../../lib/store';
+import { useRouter } from 'next/navigation';
 
 interface SmartBanner {
   id: string
@@ -16,6 +18,26 @@ interface SmartBanner {
 const initialBanner: SmartBanner | null = null
 
 export default function AdminSmartBanners() {
+  const user = useAppSelector((state) => state.auth.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user || user.role !== "admin") {
+      router.push("/");
+    }
+  }, [user, router]);
+
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-spectra mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   const [banner, setBanner] = useState<SmartBanner | null>(initialBanner)
   const [showModal, setShowModal] = useState(false)
   const [form, setForm] = useState({

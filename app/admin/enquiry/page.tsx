@@ -1,14 +1,36 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import AdminLayout from "../../../components/AdminLayout"
 import { Eye, Trash2, CheckCircle2 } from "lucide-react"
+import { useAppSelector } from '../../../lib/store';
+import { useRouter } from 'next/navigation';
 
 const mockEnquiries = [
   { id: "1", name: "John Doe", email: "john@example.com", subject: "Order Issue", message: "I have an issue with my order.", date: "2024-05-01", read: false },
 ]
 
 export default function AdminEnquiry() {
+  const user = useAppSelector((state) => state.auth.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user || user.role !== "admin") {
+      router.push("/");
+    }
+  }, [user, router]);
+
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-spectra mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   const [enquiries, setEnquiries] = useState(mockEnquiries)
   const [viewing, setViewing] = useState<any | null>(null)
   const handleDelete = (id: string) => setEnquiries(enquiries.filter(e => e.id !== id))

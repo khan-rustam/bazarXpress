@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "../../../components/AdminLayout"
-import { getCurrentUser } from "../../../lib/auth"
+import { useAppSelector } from '../../../lib/store'
 import { Search, Filter, MoreHorizontal, Edit, Eye, Package, Truck, CheckCircle, X, RefreshCw } from "lucide-react"
 import { Pencil } from "lucide-react"
 
@@ -88,7 +88,7 @@ const statusConfig = {
 const statusOptions = ["Processing", "Shipped", "Delivered", "Cancelled", "Refunded"]
 
 export default function AdminOrders() {
-  const [user, setUser] = useState(null)
+  const user = useAppSelector((state) => state.auth.user)
   const [orders, setOrders] = useState(mockOrders)
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
@@ -97,13 +97,10 @@ export default function AdminOrders() {
   const router = useRouter()
 
   useEffect(() => {
-    const currentUser = getCurrentUser()
-    if (!currentUser || currentUser.role !== "admin") {
+    if (!user || user.role !== "admin") {
       router.push("/")
-      return
     }
-    setUser(currentUser as any)
-  }, [router])
+  }, [user, router])
 
   const filteredOrders = orders.filter((order) => {
     const matchesSearch =
@@ -132,7 +129,7 @@ export default function AdminOrders() {
     setViewing(null)
   }
 
-  if (!user) {
+  if (!user || user.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

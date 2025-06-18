@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Layout from "../../components/Layout"
-import { getCurrentUser } from "../../lib/auth"
-import { Package, Truck, CheckCircle, Clock, Eye } from "lucide-react"
 import Link from "next/link"
+import { useAppSelector } from '../../lib/store';
+import { Package, Truck, CheckCircle, Clock, Eye } from "lucide-react"
 
 // Mock orders data
 const mockOrders = [
@@ -60,18 +60,15 @@ const statusConfig = {
 }
 
 export default function Orders() {
-  const [user, setUser] = useState(null)
+  const user = useAppSelector((state) => state.auth.user);
   const [orders, setOrders] = useState(mockOrders)
   const router = useRouter()
 
   useEffect(() => {
-    const currentUser = getCurrentUser()
-    if (!currentUser) {
-      router.push("/auth/login")
-      return
+    if (!user) {
+      router.push("/auth/login");
     }
-    setUser(currentUser)
-  }, [router])
+  }, [user, router]);
 
   if (!user) {
     return (

@@ -3,13 +3,13 @@
 import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "../../../components/AdminLayout"
-import { getCurrentUser, type User } from "../../../lib/auth"
 import { products } from "../../../lib/products"
 import { Search, Filter, MoreHorizontal, Edit, Trash2, Plus, Eye, Package } from "lucide-react"
 import Image from "next/image"
+import { useAppSelector } from '../../../lib/store'
 
 export default function AdminProducts() {
-  const [user, setUser] = useState<User | null>(null)
+  const user = useAppSelector((state) => state.auth.user)
   const [productList, setProductList] = useState(products)
   const [searchTerm, setSearchTerm] = useState("")
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -19,13 +19,10 @@ export default function AdminProducts() {
   const searchRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const currentUser = getCurrentUser()
-    if (!currentUser || currentUser.role !== "admin") {
+    if (!user || user.role !== "admin") {
       router.push("/")
-      return
     }
-    setUser(currentUser)
-  }, [router])
+  }, [user, router])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -64,7 +61,7 @@ export default function AdminProducts() {
     })
     .slice(0, 5) // Limit to 5 suggestions
 
-  if (!user) {
+  if (!user || user.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

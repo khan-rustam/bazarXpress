@@ -2,12 +2,15 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Layout from "../../../components/Layout"
 import { registerUser, setCurrentUser } from "../../../lib/auth"
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
+import { Eye, EyeOff, Mail, Lock, User, Calendar } from "lucide-react"
+import { useAppDispatch, useAppSelector } from '../../../lib/store';
+import { register, clearError } from '../../../lib/slices/authSlice';
+import { toast } from 'react-toastify';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -15,12 +18,27 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
+    phone: "",
+    dateOfBirth: "",
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const dispatch = useAppDispatch();
+  const { user, loading } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (error) toast.error(error);
+    return () => { dispatch(clearError()); };
+  }, [error, dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      toast.success('Registration successful!');
+      router.push('/');
+    }
+  }, [user, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -32,30 +50,21 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    setError("")
-
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match")
-      setIsLoading(false)
-      return
+      toast.warning('Passwords do not match');
+      return;
     }
-
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long")
-      setIsLoading(false)
-      return
+      toast.warning('Password must be at least 6 characters long');
+      return;
     }
-
-    try {
-      const user = registerUser(formData.email, formData.password, formData.name)
-      setCurrentUser(user)
-      router.push("/")
-    } catch (err) {
-      setError("An error occurred. Please try again.")
-    } finally {
-      setIsLoading(false)
-    }
+    dispatch(register({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      phone: formData.phone,
+      dateOfBirth: formData.dateOfBirth,
+    }));
   }
 
   return (
@@ -166,6 +175,41 @@ export default function Register() {
                 </div>
               </div>
 
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-codGray mb-2">
+                  Phone Number (optional)
+                </label>
+                <div className="relative">
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra focus:border-transparent"
+                    placeholder="Enter your phone number"
+                  />
+                  <User className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="dateOfBirth" className="block text-sm font-medium text-codGray mb-2">
+                  Date of Birth (optional)
+                </label>
+                <div className="relative">
+                  <input
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    type="date"
+                    value={formData.dateOfBirth}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-spectra focus:border-transparent"
+                  />
+                  <Calendar className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
+                </div>
+              </div>
+
               <div className="flex items-center">
                 <input
                   id="terms"
@@ -188,10 +232,10 @@ export default function Register() {
 
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={loading}
                 className="w-full bg-gradient-to-r from-spectra to-elm hover:from-elm hover:to-spectra text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? "Creating account..." : "Create Account"}
+                {loading ? "Creating account..." : "Create Account"}
               </button>
 
               <div className="text-center">

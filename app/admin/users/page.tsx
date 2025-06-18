@@ -3,74 +3,97 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "../../../components/AdminLayout"
-import { getCurrentUser } from "../../../lib/auth"
-import { Search, Filter, MoreHorizontal, Edit, Trash2, UserPlus, Eye } from "lucide-react"
+import { useAppSelector } from '../../../lib/store'
+import { Search, Edit, Trash2, Eye, Loader2, Check, X } from "lucide-react"
+import toast from 'react-hot-toast'
 
-// Mock users data
-const mockUsers = [
-  {
-    id: "1",
-    name: "John Doe",
-    email: "john@example.com",
-    role: "user",
-    joinDate: "2024-01-15",
-    orders: 5,
-    totalSpent: 1299.95,
-  },
-  {
-    id: "2",
-    name: "Jane Smith",
-    email: "jane@example.com",
-    role: "user",
-    joinDate: "2024-02-20",
-    orders: 3,
-    totalSpent: 599.97,
-  },
-  {
-    id: "3",
-    name: "Admin User",
-    email: "admin@gmail.com",
-    role: "admin",
-    joinDate: "2023-12-01",
-    orders: 0,
-    totalSpent: 0,
-  },
-  {
-    id: "4",
-    name: "Mike Johnson",
-    email: "mike@example.com",
-    role: "user",
-    joinDate: "2024-01-10",
-    orders: 1,
-    totalSpent: 89.99,
-  },
-]
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'user';
+  phone?: string;
+  dateOfBirth?: string;
+  address?: any;
+};
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function AdminUsers() {
-  const [user, setUser] = useState(null)
-  const [users, setUsers] = useState(mockUsers)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterRole, setFilterRole] = useState("all")
+  const user = useAppSelector((state) => state.auth.user)
+  const [users, setUsers] = useState<User[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string>("")
+  const [searchTerm, setSearchTerm] = useState<string>("")
+  const [filterRole, setFilterRole] = useState<string>("all")
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [changingRoleId, setChangingRoleId] = useState<string | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
-    const currentUser = getCurrentUser()
-    if (!currentUser || currentUser.role !== "admin") {
+    if (!user || user.role !== "admin") {
       router.push("/")
-      return
     }
-    setUser(currentUser)
-  }, [router])
+  }, [user, router])
 
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesRole = filterRole === "all" || user.role === filterRole
+  const fetchUsers = async () => {
+    setLoading(true)
+    setError("")
+    try {
+      const res = await fetch(`${API_URL}/auth/users`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+      if (!res.ok) throw new Error("Failed to fetch users")
+      const data = await res.json()
+      setUsers(data)
+    } catch (err) {
+      setError("Could not load users.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => { fetchUsers() }, [])
+
+  const handleDelete = async (id: string) => {
+    setDeletingId(id)
+    try {
+      const res = await fetch(`${API_URL}/auth/users/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+      if (!res.ok) throw new Error("Delete failed")
+      setUsers(users.filter(u => u.id !== id))
+      toast.success("User deleted")
+    } catch {
+      toast.error("Failed to delete user")
+    } finally {
+      setDeletingId(null)
+      setConfirmDelete(null)
+    }
+  }
+
+  const handleRoleChange = async (id: string, newRole: 'admin' | 'user') => {
+    setChangingRoleId(id)
+    try {
+      const res = await fetch(`${API_URL}/auth/users/${id}/role`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+        body: JSON.stringify({ role: newRole })
+      })
+      if (!res.ok) throw new Error("Role update failed")
+      setUsers(users.map(u => u.id === id ? { ...u, role: newRole } : u))
+      toast.success("Role updated")
+    } catch {
+      toast.error("Failed to update role")
+    } finally {
+      setChangingRoleId(null)
+    }
+  }
+
+  const filteredUsers = users.filter((u) => {
+    const matchesSearch = u.name.toLowerCase().includes(searchTerm.toLowerCase()) || u.email.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesRole = filterRole === "all" || u.role === filterRole
     return matchesSearch && matchesRole
   })
 
-  if (!user) {
+  if (!user || user.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -90,10 +113,6 @@ export default function AdminUsers() {
             <h2 className="text-2xl font-bold text-codGray">Users Management</h2>
             <p className="text-gray-600">Manage all registered users</p>
           </div>
-          <button className="bg-brand-primary hover:bg-brand-primary-dark text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
-            <UserPlus className="h-4 w-4" />
-            <span>Add User</span>
-          </button>
         </div>
 
         {/* Filters */}
@@ -123,76 +142,98 @@ export default function AdminUsers() {
 
         {/* Users Table */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="text-left py-3 px-6 font-medium text-gray-700">User</th>
-                  <th className="text-left py-3 px-6 font-medium text-gray-700">Role</th>
-                  <th className="text-left py-3 px-6 font-medium text-gray-700">Join Date</th>
-                  <th className="text-left py-3 px-6 font-medium text-gray-700">Orders</th>
-                  <th className="text-left py-3 px-6 font-medium text-gray-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user.id} className="border-b border-gray-200 hover:bg-gray-50">
-                    <td className="py-4 px-6">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center">
-                          <span className="text-white font-semibold text-sm">{user.name.charAt(0)}</span>
-                        </div>
-                        <div>
-                          <p className="font-medium text-codGray">{user.name}</p>
-                          <p className="text-sm text-gray-500">{user.email}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-6">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${user.role === "admin" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"
-                          }`}
-                      >
-                        {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-gray-600">{new Date(user.joinDate).toLocaleDateString()}</td>
-                    <td className="py-4 px-6 text-gray-600">{user.orders}</td>
-
-                    <td className="py-4 px-6">
-                      <div className="flex items-center space-x-2">
-                        <button className="p-1 text-gray-400 hover:text-brand-primary transition-colors">
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button className="p-1 text-gray-400 hover:text-red-500 transition-colors">
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
+          {loading ? (
+            <div className="flex justify-center items-center py-12"><Loader2 className="animate-spin h-8 w-8 text-brand-primary" /></div>
+          ) : error ? (
+            <div className="text-center text-red-500 py-8">{error}</div>
+          ) : filteredUsers.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">No users found.</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="text-left py-3 px-6 font-medium text-gray-700">User</th>
+                    <th className="text-left py-3 px-6 font-medium text-gray-700">Role</th>
+                    <th className="text-left py-3 px-6 font-medium text-gray-700">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600">
-            Showing {filteredUsers.length} of {users.length} users
-          </p>
-          <div className="flex space-x-2">
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors">
-              Previous
-            </button>
-            <button className="px-3 py-1 bg-brand-primary text-white rounded text-sm">1</button>
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors">
-              2
-            </button>
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors">
-              Next
-            </button>
-          </div>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((u) => (
+                    <tr key={u.id} className="border-b border-gray-200 hover:bg-gray-50">
+                      <td className="py-4 px-6">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold shadow-inner" style={{ background: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)' }}>
+                            {u.name.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="font-medium text-codGray">{u.name}</p>
+                            <p className="text-sm text-gray-500">{u.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${u.role === "admin" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"}`}>
+                          {u.role.charAt(0).toUpperCase() + u.role.slice(1)}
+                        </span>
+                        {user.id !== u.id && (
+                          <select
+                            value={u.role}
+                            disabled={changingRoleId === u.id}
+                            onChange={e => handleRoleChange(u.id, e.target.value as 'admin' | 'user')}
+                            className="ml-2 border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                          >
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                          </select>
+                        )}
+                        {changingRoleId === u.id && <Loader2 className="inline ml-2 h-4 w-4 animate-spin text-brand-primary" />}
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center space-x-2">
+                          {/* <button className="p-1 text-text-tertiary hover:text-brand-primary transition-colors"><Eye className="h-4 w-4" /></button> */}
+                          {user.id !== u.id && (
+                            <button
+                              className="p-1 text-text-tertiary hover:text-brand-error transition-colors"
+                              onClick={() => setConfirmDelete(u.id)}
+                              disabled={deletingId === u.id}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
+                          {deletingId === u.id && <Loader2 className="inline ml-2 h-4 w-4 animate-spin text-brand-error" />}
+                        </div>
+                        {/* Confirm Delete Modal */}
+                        {confirmDelete === u.id && (
+                          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+                            <div className="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full text-center">
+                              <h3 className="text-lg font-bold mb-2">Delete User?</h3>
+                              <p className="mb-4 text-gray-600">Are you sure you want to delete <span className="font-semibold">{u.name}</span>? This action cannot be undone.</p>
+                              <div className="flex justify-center gap-4 mt-6">
+                                <button
+                                  className="bg-brand-error hover:bg-brand-error-dark text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                                  onClick={() => handleDelete(u.id)}
+                                  disabled={deletingId === u.id}
+                                >
+                                  <Trash2 className="h-4 w-4" /> Delete
+                                </button>
+                                <button
+                                  className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2"
+                                  onClick={() => setConfirmDelete(null)}
+                                >
+                                  <X className="h-4 w-4" /> Cancel
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </AdminLayout>

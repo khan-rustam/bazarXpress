@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "../../../components/AdminLayout"
-import { getCurrentUser, type User } from "../../../lib/auth"
+import { useAppSelector } from '../../../lib/store'
 import { Search, Filter, Star, CheckCircle, X, Eye, MoreHorizontal } from "lucide-react"
 
 // Mock reviews data
@@ -49,7 +49,7 @@ const mockReviews = [
 ]
 
 export default function AdminReviews() {
-  const [user, setUser] = useState<User | null>(null)
+  const user = useAppSelector((state) => state.auth.user)
   const [reviews, setReviews] = useState(mockReviews)
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
@@ -57,13 +57,10 @@ export default function AdminReviews() {
   const router = useRouter()
 
   useEffect(() => {
-    const currentUser = getCurrentUser()
-    if (!currentUser || currentUser.role !== "admin") {
+    if (!user || user.role !== "admin") {
       router.push("/")
-      return
     }
-    setUser(currentUser)
-  }, [router])
+  }, [user, router])
 
   const filteredReviews = reviews.filter((review) => {
     const matchesSearch =
@@ -93,7 +90,7 @@ export default function AdminReviews() {
     )
   }
 
-  if (!user) {
+  if (!user || user.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

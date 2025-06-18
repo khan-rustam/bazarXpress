@@ -1,8 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import AdminLayout from "../../../components/AdminLayout"
 import { Plus, Pencil, Trash2 } from "lucide-react"
+import { useAppSelector } from '../../../lib/store';
+import { useRouter } from 'next/navigation';
 
 const mockWarehouses = [
   {
@@ -18,6 +20,26 @@ const mockWarehouses = [
 ]
 
 export default function AdminWarehouse() {
+  const user = useAppSelector((state) => state.auth.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user || user.role !== "admin") {
+      router.push("/");
+    }
+  }, [user, router]);
+
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-spectra mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   const [warehouses, setWarehouses] = useState(mockWarehouses)
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing] = useState<any | null>(null)

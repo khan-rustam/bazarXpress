@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "../../components/AdminLayout"
-import { getCurrentUser } from "../../lib/auth"
+import { useAppSelector } from '../../lib/store'
 import { Users, ShoppingCart, Package, DollarSign, TrendingUp, Eye } from "lucide-react"
 
 // Mock data for dashboard
@@ -34,19 +34,16 @@ const topProducts = [
 ]
 
 export default function AdminDashboard() {
-  const [user, setUser] = useState(null)
+  const user = useAppSelector((state) => state.auth.user)
   const router = useRouter()
 
   useEffect(() => {
-    const currentUser = getCurrentUser()
-    if (!currentUser || currentUser.role !== "admin") {
+    if (!user || user.role !== "admin") {
       router.push("/")
-      return
     }
-    setUser(currentUser)
-  }, [router])
+  }, [user, router])
 
-  if (!user) {
+  if (!user || user.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -62,7 +59,7 @@ export default function AdminDashboard() {
       <div className="space-y-6">
         {/* Welcome Section */}
         <div className="bg-gradient-to-r from-spectra to-elm rounded-lg p-6 text-white">
-          <h2 className="text-2xl font-bold mb-2">Welcome back, Admin!</h2>
+          <h2 className="text-2xl font-bold mb-2">Welcome back, {user?.name || 'Admin'}!</h2>
           <p className="text-gray-200">Here's what's happening with your store today.</p>
         </div>
 

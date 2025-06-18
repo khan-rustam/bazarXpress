@@ -3,21 +3,18 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "../../../components/AdminLayout"
-import { getCurrentUser } from "../../../lib/auth"
+import { useAppSelector } from '../../../lib/store'
 import { BarChart3, TrendingUp, TrendingDown, DollarSign, Users, ShoppingCart, Calendar } from "lucide-react"
 
 export default function AdminReports() {
-  const [user, setUser] = useState(null)
+  const user = useAppSelector((state) => state.auth.user)
   const router = useRouter()
 
   useEffect(() => {
-    const currentUser = getCurrentUser()
-    if (!currentUser || currentUser.role !== "admin") {
+    if (!user || user.role !== "admin") {
       router.push("/")
-      return
     }
-    setUser(currentUser)
-  }, [router])
+  }, [user, router])
 
   const salesData = {
     thisMonth: 45678.9,
@@ -35,7 +32,7 @@ export default function AdminReports() {
     { name: "Sports", sales: 2229.25, percentage: 4.9 },
   ]
 
-  if (!user) {
+  if (!user || user.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

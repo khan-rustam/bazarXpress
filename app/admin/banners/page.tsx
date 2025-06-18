@@ -1,14 +1,36 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import AdminLayout from "../../../components/AdminLayout"
 import { Plus, Pencil, Trash2 } from "lucide-react"
+import { useAppSelector } from '../../../lib/store';
+import { useRouter } from 'next/navigation';
 
 const mockBanners = [
   { id: "1", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80", headline: "Big Sale!", subheadline: "Up to 50% Off", buttonText: "Shop Now", buttonLink: "/shop", highlight: "Get up to 30% off on your first $150 purchase" },
 ]
 
 export default function AdminBanner() {
+  const user = useAppSelector((state) => state.auth.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user || user.role !== "admin") {
+      router.push("/");
+    }
+  }, [user, router]);
+
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-spectra mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   const [banners, setBanners] = useState(mockBanners)
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing] = useState<any | null>(null)

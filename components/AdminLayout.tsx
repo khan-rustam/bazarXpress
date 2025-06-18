@@ -37,6 +37,7 @@ import {
 import { useRouter } from "next/navigation"
 import { setCurrentUser } from "../lib/auth"
 import Image from "next/image"
+import { useAppSelector } from '../lib/store'
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -80,7 +81,6 @@ const menuItems = [
       { name: "Blogs", href: "/admin/blog", icon: BookOpen },
      
       { name: "Enquiry", href: "/admin/enquiry", icon: Mail },
-      { name: "Subscriptions", href: "/admin/subscriptions", icon: UserPlus },
       { name: "Rating & Reviews", href: "/admin/reviews", icon: Star },
     ],
   },
@@ -90,6 +90,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const pathname = usePathname()
   const router = useRouter()
+  const user = useAppSelector((state) => state.auth.user)
 
   const handleLogout = () => {
     setCurrentUser(null)
@@ -123,11 +124,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         {/* User Profile */}
         <div className="flex items-center gap-3 px-4 py-4 border-b border-purple-900/20 bg-purple-900/10">
           <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-400 via-purple-500 to-blue-400 flex items-center justify-center text-lg font-bold shadow-inner">
-            N
+            {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
           </div>
           {sidebarOpen && (
             <div>
-              <div className="font-semibold text-white leading-tight">Admin Name</div>
+              <div className="font-semibold text-white leading-tight">{user?.name || 'Admin'}</div>
               <div className="text-xs text-purple-200/80">Administrator</div>
             </div>
           )}

@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import AdminLayout from "../../../components/AdminLayout"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 import dynamic from 'next/dynamic'
+import { useAppSelector } from '../../../lib/store'
+import { useRouter } from 'next/navigation'
 
 // Dynamically import the RichTextEditor to ensure it's only rendered on the client
 const RichTextEditor = dynamic(() => import('../../../components/RichTextEditor'), { ssr: false })
@@ -20,6 +22,8 @@ const mockBlogs = [
 ]
 
 export default function AdminBlog() {
+  const user = useAppSelector((state) => state.auth.user)
+  const router = useRouter()
   const [blogs, setBlogs] = useState(mockBlogs)
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing] = useState<any | null>(null)
@@ -31,6 +35,23 @@ export default function AdminBlog() {
     image: "",
     content: "", // Content will be a string (HTML)
   })
+
+  useEffect(() => {
+    if (!user || user.role !== "admin") {
+      router.push("/")
+    }
+  }, [user, router])
+
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-spectra mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   const openAdd = () => {
     setEditing(null)

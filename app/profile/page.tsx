@@ -5,66 +5,178 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Layout from "../../components/Layout"
-import { getCurrentUser, setCurrentUser, type User } from "../../lib/auth"
 import { UserIcon, Mail, Phone, MapPin, Calendar, Edit3, Save, X } from "lucide-react"
 import Link from "next/link"
+import { useAppSelector, useAppDispatch } from '../../lib/store';
+import { updateProfile } from '../../lib/slices/authSlice';
+import toast from 'react-hot-toast';
 
 export default function Profile() {
-  const [user, setUser] = useState<User | null>(null)
+  const user = useAppSelector((state) => state.auth.user);
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    dateOfBirth: "",
+    name: user?.name ?? "",
+    email: user?.email ?? "",
+    phone: user?.phone ?? "",
+    address: user?.address ?? {
+      street: "",
+      landmark: "",
+      city: "",
+      state: "",
+      country: "",
+      pincode: "",
+    },
+    dateOfBirth: user?.dateOfBirth ?? "",
   })
   const router = useRouter()
+  const dispatch = useAppDispatch();
+  const [addressErrors, setAddressErrors] = useState({
+    street: '',
+    landmark: '',
+    city: '',
+    state: '',
+    country: '',
+    pincode: '',
+  });
+  const countryOptions = [
+    "India",
+    "United States",
+    "United Kingdom",
+    "Canada",
+    "Australia",
+    "Germany",
+    "France",
+    "Other",
+  ];
+  const [fieldErrors, setFieldErrors] = useState({
+    email: '',
+    phone: '',
+    dateOfBirth: '',
+  });
 
   useEffect(() => {
-    const currentUser = getCurrentUser()
-    if (!currentUser) {
-      router.push("/auth/login")
-      return
+    if (!user) {
+      router.push("/auth/login");
+    } else {
+      setFormData({
+        name: user.name ?? "",
+        email: user.email ?? "",
+        phone: user.phone ?? "",
+        address: user.address ?? {
+          street: "",
+          landmark: "",
+          city: "",
+          state: "",
+          country: "",
+          pincode: "",
+        },
+        dateOfBirth: user.dateOfBirth ?? "",
+      });
     }
-    setUser(currentUser)
-    setFormData({
-      name: currentUser.name,
-      email: currentUser.email,
-      phone: "",
-      address: "",
-      dateOfBirth: "",
-    })
-  }, [router])
+  }, [user, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
+    const { name, value } = e.target;
+    if (name.startsWith('address.')) {
+      const key = name.split('.')[1];
+      setFormData({
+        ...formData,
+        address: {
+          ...formData.address,
+          [key]: value,
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   }
 
-  const handleSave = () => {
-    if (user) {
-      const updatedUser = { ...user, name: formData.name, email: formData.email }
-      setCurrentUser(updatedUser)
-      setUser(updatedUser)
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    if (name.startsWith('address.')) {
+      const key = name.split('.')[1];
+      setFormData({
+        ...formData,
+        address: {
+          ...formData.address,
+          [key]: value,
+        },
+      });
     }
-    setIsEditing(false)
+  };
+
+  const handleSave = async () => {
+    // Address validation
+    const errors: typeof addressErrors = {
+      street: formData.address.street.trim() ? '' : 'Street is required',
+      landmark: formData.address.landmark.trim() ? '' : 'Landmark is required',
+      city: formData.address.city.trim() ? '' : 'City is required',
+      state: formData.address.state.trim() ? '' : 'State is required',
+      country: formData.address.country.trim() ? '' : 'Country is required',
+      pincode: /^[0-9]{6}$/.test(formData.address.pincode.trim()) ? '' : 'Pincode must be 6 digits',
+    };
+    setAddressErrors(errors);
+    const hasAddressError = Object.values(errors).some(Boolean);
+
+    // Phone validation (10 digits)
+    const phoneError = formData.phone.trim() && !/^\d{10}$/.test(formData.phone.trim()) ? 'Phone must be 10 digits' : '';
+    // Email validation (basic)
+    const emailError = formData.email.trim() && !/^\S+@\S+\.\S+$/.test(formData.email.trim()) ? 'Invalid email format' : '';
+    setFieldErrors({
+      email: emailError,
+      phone: phoneError,
+      dateOfBirth: '',
+    });
+    const hasFieldError = [emailError, phoneError].some(Boolean);
+
+    if (hasAddressError || hasFieldError) {
+      toast.error('Please fix the errors in the form.');
+      return;
+    }
+    try {
+      await dispatch(updateProfile(formData)).unwrap();
+      toast.success('Profile updated successfully!');
+      setIsEditing(false);
+    } catch (err: any) {
+      toast.error(err || 'Failed to update profile');
+    }
   }
 
   const handleCancel = () => {
     if (user) {
       setFormData({
-        name: user.name,
-        email: user.email,
-        phone: "",
-        address: "",
-        dateOfBirth: "",
+        name: user.name ?? "",
+        email: user.email ?? "",
+        phone: user.phone ?? "",
+        address: user.address ?? {
+          street: "",
+          landmark: "",
+          city: "",
+          state: "",
+          country: "",
+          pincode: "",
+        },
+        dateOfBirth: user.dateOfBirth ?? "",
       })
     }
     setIsEditing(false)
   }
+
+  // Helper to format address
+  const formatAddress = (address: typeof formData.address) => {
+    if (!address) return "Not provided";
+    return [
+      address.street,
+      address.landmark,
+      address.city,
+      address.state,
+      address.country,
+      address.pincode
+    ].filter(Boolean).join(", ");
+  };
 
   if (!user) {
     return (
@@ -219,16 +331,93 @@ export default function Profile() {
                   Address
                 </label>
                 {isEditing ? (
-                  <textarea
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    placeholder="Enter your address"
-                    rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-codGray mb-2">
+                        Street
+                      </label>
+                      <input
+                        type="text"
+                        name="address.street"
+                        value={formData.address.street}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                      />
+                      {addressErrors.street && <p className="text-red-500 text-xs mt-1">{addressErrors.street}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-codGray mb-2">
+                        Landmark
+                      </label>
+                      <input
+                        type="text"
+                        name="address.landmark"
+                        value={formData.address.landmark}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                      />
+                      {addressErrors.landmark && <p className="text-red-500 text-xs mt-1">{addressErrors.landmark}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-codGray mb-2">
+                        City
+                      </label>
+                      <input
+                        type="text"
+                        name="address.city"
+                        value={formData.address.city}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                      />
+                      {addressErrors.city && <p className="text-red-500 text-xs mt-1">{addressErrors.city}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-codGray mb-2">
+                        State
+                      </label>
+                      <input
+                        type="text"
+                        name="address.state"
+                        value={formData.address.state}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                      />
+                      {addressErrors.state && <p className="text-red-500 text-xs mt-1">{addressErrors.state}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-codGray mb-2">
+                        Country
+                      </label>
+                      <select
+                        name="address.country"
+                        value={formData.address.country}
+                        onChange={handleSelectChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                      >
+                        {countryOptions.map((country) => (
+                          <option key={country} value={country}>
+                            {country}
+                          </option>
+                        ))}
+                      </select>
+                      {addressErrors.country && <p className="text-red-500 text-xs mt-1">{addressErrors.country}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-codGray mb-2">
+                        Pincode
+                      </label>
+                      <input
+                        type="text"
+                        name="address.pincode"
+                        value={formData.address.pincode}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                      />
+                      {addressErrors.pincode && <p className="text-red-500 text-xs mt-1">{addressErrors.pincode}</p>}
+                    </div>
+                  </div>
                 ) : (
-                  <p className="px-4 py-3 bg-gray-50 rounded-lg text-codGray">{formData.address || "Not provided"}</p>
+                  <p className="px-4 py-3 bg-gray-50 rounded-lg text-codGray">{formatAddress(formData.address)}</p>
                 )}
               </div>
             </div>

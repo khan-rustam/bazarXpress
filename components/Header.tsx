@@ -4,10 +4,11 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import { Search, ShoppingCart, Menu, X, ChevronDown, Heart, Package, Settings, LogOut, Shield, User2 } from "lucide-react"
-import { getCurrentUser, setCurrentUser } from "../lib/auth"
 import { getCartCount } from "../lib/cart"
 import type { User as AuthUser } from "../lib/auth"
 import Image from "next/image"
+import { useAppSelector, useAppDispatch } from '../lib/store';
+import { logout } from '../lib/slices/authSlice';
 
 // Mock product data - Replace this with your actual product data fetching
 const mockProducts = [
@@ -25,7 +26,6 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const [currentUser, setCurrentUserState] = useState<AuthUser | null>(null)
   const [cartCount, setCartCount] = useState(0)
   const [searchValue, setSearchValue] = useState("")
   const [searchResults, setSearchResults] = useState<typeof mockProducts>([])
@@ -36,8 +36,10 @@ export default function Header() {
   const [lastScrollY, setLastScrollY] = useState(0)
   const [showHeader, setShowHeader] = useState(true)
 
+  const currentUser = useAppSelector((state) => state.auth.user);
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    setCurrentUserState(getCurrentUser())
     setCartCount(getCartCount())
 
     // Listen for storage changes to update cart count
@@ -85,10 +87,9 @@ export default function Header() {
   }
 
   const handleLogout = () => {
-    setCurrentUser(null)
-    setCurrentUserState(null)
-    setIsProfileOpen(false)
-    router.push("/")
+    dispatch(logout());
+    setIsProfileOpen(false);
+    router.push("/");
   }
 
   // Handle search input changes

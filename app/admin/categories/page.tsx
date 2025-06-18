@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminLayout from "../../../components/AdminLayout"
-import { getCurrentUser } from "../../../lib/auth"
+import { useAppSelector } from '../../../lib/store'
 import { Search, Plus, Edit, Trash2, MoreHorizontal, Grid3X3 } from "lucide-react"
 
 // Mock categories data
@@ -51,7 +51,7 @@ const mockCategories = [
 ]
 
 export default function AdminCategories() {
-  const [user, setUser] = useState(null)
+  const user = useAppSelector((state) => state.auth.user)
   const [categories, setCategories] = useState(mockCategories)
   const [searchTerm, setSearchTerm] = useState("")
   const [showModal, setShowModal] = useState(false)
@@ -69,13 +69,10 @@ export default function AdminCategories() {
   const router = useRouter()
 
   useEffect(() => {
-    const currentUser = getCurrentUser()
-    if (!currentUser || currentUser.role !== "admin") {
+    if (!user || user.role !== "admin") {
       router.push("/")
-      return
     }
-    setUser(() => currentUser as any)
-  }, [router])
+  }, [user, router])
 
   const filteredCategories = categories.filter(
     (category) =>
@@ -150,7 +147,7 @@ export default function AdminCategories() {
     setCategories(categories.filter(cat => cat.id !== id))
   }
 
-  if (!user) {
+  if (!user || user.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
